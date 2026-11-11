@@ -1,0 +1,21 @@
+تحديث المنصة الاستشارية للزراعة الذكية
+
+هذه الحزمة تحتوي الملفات المعدّلة فقط، مع الحفاظ على مساراتها النسبية. فك الضغط داخل نسخة المشروع الحالية واستبدل الملفات التي تحمل المسارات نفسها، ثم اعمل commit/push إلى main أو master. لا ترفع ملف ZIP نفسه إلى Pages.
+
+الملفات:
+README.md
+content/دليل-تحديث-المحتوى.md
+research/organic.json
+site.config.json
+scripts/build_site.py
+scripts/test_calculators.cjs
+scripts/test_schedule_tabs.cjs
+src/index.template.html
+src/consultation.template.html
+src/farmer-tools-section.html
+public/assets/css/clean-agri-brand.css
+public/assets/js/farmer-tools.js
+public/assets/js/site-enhancements.js
+public/assets/images/clean-agri-qr.webp
+
+بعد الحفظ، افتح Actions وانتظر نجاح سير «نشر المنصة على GitHub Pages». تعيد الخطوات بناء public/index.html وصفحة الاستشارة تلقائياً من القوالب.
