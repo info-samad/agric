@@ -1,0 +1,29 @@
+    <section id="diagnosisWizard" class="content-panel bg-white rounded-3xl shadow-xl border border-blue-100 p-5 sm:p-8 mb-12 scroll-mt-28 print-card" aria-labelledby="diagnosisHeading">
+      <div class="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-6">
+        <div>
+          <span class="inline-flex items-center gap-2 bg-blue-50 text-blue-900 text-xs font-bold px-3 py-1.5 rounded-full mb-3"><i class="fa-solid fa-stethoscope"></i> مساعد استدلال أولي</span>
+          <h2 id="diagnosisHeading" class="text-2xl sm:text-3xl font-black text-emerald-950">شخّص نمط العرض خطوة بخطوة</h2>
+          <p class="text-sm text-slate-600 mt-2 leading-7 max-w-4xl">أجب بحسب ما تراه في النبات والحقل. ستظهر لك احتمالات تستحق الفحص وخطوة آمنة تالية، لا تشخيصاً نهائياً ولا وصفة رش أو تسميد.</p>
+        </div>
+        <div class="text-xs text-slate-500 bg-slate-50 rounded-xl p-3 max-w-sm leading-6"><i class="fa-solid fa-lock text-emerald-800 ml-1"></i> إجاباتك تبقى في المتصفح ولا تُرسل ولا تُحفظ.</div>
+      </div>
+
+      <div class="diagnosis-track rounded-2xl bg-slate-50 border border-slate-200 p-4 sm:p-5">
+        <div class="flex items-center justify-between gap-3 mb-3"><span id="diagStepStatus" class="text-sm font-black text-emerald-950" aria-live="polite">السؤال 1 من 5</span><span id="diagStepPercent" class="text-xs font-bold text-slate-500">20٪</span></div>
+        <div class="w-full h-2.5 bg-slate-200 rounded-full overflow-hidden" role="progressbar" aria-label="تقدم التشخيص" aria-valuemin="0" aria-valuemax="100" aria-valuenow="20"><div id="diagProgressBar" class="h-full bg-emerald-800 rounded-full transition-all duration-300" style="width:20%"></div></div>
+        <div id="diagQuestion" class="mt-5"></div>
+        <div class="flex flex-col-reverse sm:flex-row sm:items-center sm:justify-between gap-3 mt-6">
+          <button type="button" id="diagBack" class="secondary-button" disabled><i class="fa-solid fa-arrow-right ml-1"></i> السابق</button>
+          <button type="button" id="diagNext" class="primary-button" disabled>التالي <i class="fa-solid fa-arrow-left mr-1"></i></button>
+        </div>
+      </div>
+
+      <div id="diagnosisResult" class="hidden mt-5 rounded-2xl border border-emerald-200 bg-emerald-50 p-4 sm:p-6" aria-live="polite" tabindex="-1">
+        <div class="flex items-start gap-3"><span class="result-icon"><i class="fa-solid fa-magnifying-glass-chart"></i></span><div class="flex-1"><p class="text-xs font-bold text-emerald-800">قراءة أولية للنمط — ليست تشخيصاً</p><h3 id="diagResultTitle" class="text-xl font-black text-emerald-950 mt-1"></h3><div id="diagResultBody" class="text-sm text-slate-700 leading-7 mt-3"></div></div></div>
+        <div class="flex flex-col sm:flex-row gap-3 mt-5">
+          <button type="button" id="diagRestart" class="secondary-button"><i class="fa-solid fa-rotate-right ml-1"></i> ابدأ تشخيصاً جديداً</button>
+          <a id="diagCropLink" href="#strategicCropRecommendations" class="secondary-button"><i class="fa-solid fa-seedling ml-1"></i> انتقل إلى إرشادات المحاصيل</a>
+        </div>
+      </div>
+      <noscript><p class="mt-4 rounded-xl bg-red-50 p-3 text-sm text-red-900">يتطلب مسار التشخيص تفعيل JavaScript في المتصفح؛ بقية الدليل الإرشادي متاحة للقراءة.</p></noscript>
+    </section>
