@@ -1,0 +1,33 @@
+:root{--clean-cream:#f7f6f0;--clean-ink:#263d31;--clean-forest:#193d2f;--clean-deep:#122e23;--clean-soft:#325844;--clean-sage:#768667;--clean-sage-pale:#e8ecdf;--clean-gold:#d5b36a;--clean-soil:#a5754a;--clean-border:#e4e2d7}
+html{scroll-behavior:smooth;scroll-padding-top:7rem}
+body{font-family:'Noto Sans Arabic','DM Sans',sans-serif!important;background-color:var(--clean-cream)!important;color:var(--clean-ink)!important}
+body>header{background:var(--clean-deep)!important;border-bottom-color:var(--clean-gold)!important;box-shadow:0 12px 34px #122e2324!important}
+.site-header-row{min-height:82px!important}
+.site-brand h1{letter-spacing:-.02em}
+.site-mobile-nav{background:#122e23f2!important;border-top:1px solid #d5b36a55!important;backdrop-filter:blur(14px)}
+.site-mobile-nav-link{color:#fffdf4!important}
+.advisor-dashboard,.content-panel,.agri-section,.section-hub,.monthly-guidance{border-color:var(--clean-border)!important;border-radius:18px!important;box-shadow:0 12px 34px #263d310d!important}
+.advisor-dashboard-hero{background:linear-gradient(135deg,var(--clean-deep),var(--clean-forest))!important}
+.advisor-tool-card,.dashboard-stat-card,.advanced-indicator-card,.monthly-guidance-card,.organic-step,.agri-details,.crop-card,.schedule-card,.reference-item{border-color:var(--clean-border)!important;border-radius:14px!important}
+body .text-emerald-950,body .text-emerald-900{color:var(--clean-forest)!important}
+body .text-gold-400,body .text-gold-500,body .text-gold-600{color:var(--clean-gold)!important}
+body .bg-emerald-950{background-color:var(--clean-deep)!important}
+body .bg-emerald-900{background-color:var(--clean-forest)!important}
+body .border-gold-500,body .border-gold-500\/40{border-color:var(--clean-gold)!important}
+button,a,input,select,textarea,summary{font-family:'Noto Sans Arabic','DM Sans',sans-serif}
+button,.secondary-button,.primary-button{border-radius:12px}
+.section-hub-links a[aria-current="page"]{background:var(--clean-forest)!important;border-color:var(--clean-forest)!important}
+.manure-brand-card{background:linear-gradient(115deg,#e8ecdf,#fffdf4)!important;border-color:var(--clean-border)!important;border-inline-start-color:var(--clean-gold)!important}
+.manure-brand-card>a{background:var(--clean-forest)!important}
+.site-contact-links{display:flex;flex-wrap:wrap;justify-content:center;align-items:center;gap:.65rem;color:#e8ecdf;font-size:.75rem}
+.site-contact-links a{color:#fffdf4;text-decoration:underline;text-underline-offset:3px}
+.section-gallery{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,240px),1fr));gap:1rem;margin:1.2rem 0}
+.section-gallery-item{overflow:hidden;margin:0;border:1px solid var(--clean-border);border-radius:14px;background:#fffdf4;box-shadow:0 8px 24px #263d310d}
+.section-gallery-item img{display:block;width:100%;max-height:360px;object-fit:cover}
+.section-gallery-item figcaption{padding:.65rem .8rem;color:var(--clean-ink);font-size:.78rem;line-height:1.8}
+.manure-analysis{width:100%;margin-top:.7rem;border-collapse:collapse;font-size:.78rem}.manure-analysis th,.manure-analysis td{border-bottom:1px solid var(--clean-border);padding:.45rem .6rem;text-align:right}.manure-analysis th{color:var(--clean-forest)}.manure-analysis-empty{padding:.6rem .75rem;border-radius:10px;background:#fffdf4;color:#687463;font-size:.75rem;line-height:1.8}.manure-analysis-meta{display:flex;flex-wrap:wrap;gap:.4rem .9rem;margin-top:.5rem;color:#697361;font-size:.7rem}
+.consultation-body{font-family:'Noto Sans Arabic','DM Sans',sans-serif!important;background:var(--clean-cream)!important;color:var(--clean-ink)!important}
+.consultation-header{background:var(--clean-deep)!important;border-bottom:2px solid var(--clean-gold)!important}
+@media(max-width:600px){.site-contact-links{flex-direction:column;gap:.4rem}.section-gallery{grid-template-columns:1fr}.section-gallery-item img{max-height:280px}}
+@media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
+@media print{.section-gallery-item,.manure-brand-card{break-inside:avoid}}

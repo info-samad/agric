@@ -15,6 +15,8 @@ def e(text):
     return escape(str(text), quote=True)
 
 config = load('site.config.json')
+product = load('content/manure-product.json')
+section_images = load('content/section-images.json').get('images', [])
 organic = load('research/organic.json')
 catalogue = load('research/crops.json')
 audit = load('research/audit.json')
@@ -48,8 +50,12 @@ def links(ids):
 def section_start(id, kicker, title, intro):
     return f'<section id="{id}" class="agri-section" aria-labelledby="{id}Title"><span class="agri-kicker">{e(kicker)}</span><h2 id="{id}Title">{e(title)}</h2><p>{e(intro)}</p><span class="agri-review">مراجعة المصادر: {e(reviewed)}</span>'
 
-organic_html = section_start('organicManure','سماد الزراعة النظيفة · السماد العضوي الحيواني',organic['title'],'روث الأبقار والأغنام والماعز والدواجن والكمبوست الحيواني مواد متغيرة التركيب؛ لا توجد قيمة NPK ثابتة تُستنتج من اسم الحيوان وحده. اربط قرار الاستخدام بتحليل الدفعة الفعلية وسلامتها واحتياج التربة والمحصول.')
-organic_html += '<div class="manure-brand-card"><div><span class="manure-brand-kicker">المنتج الذي طلبتم إبراز اسمه</span><h3>سماد الزراعة النظيفة <span>(سماد عضوي حيواني)</span></h3><p>اسم المنتج أو نوع الحيوان لا يحدد وحده نسب العناصر أو الملوحة أو درجة النضج. راجع ملصق العبوة واطلب تحليل الدفعة الحالية قبل تحديد طريقة الاستخدام أو كميته.</p></div><a href="https://info-samad.github.io" target="_blank" rel="noopener noreferrer">زيارة موقع سماد الزراعة النظيفة <span aria-hidden="true">↗</span></a></div>'
+organic_html = section_start('organicManure','سماد الزراعة النظيفة · السماد العضوي الحيواني',organic['title'],product.get('description', 'روث الأبقار والأغنام والماعز والدواجن مواد متغيرة التركيب؛ لا توجد قيمة NPK ثابتة تُستنتج من اسم الحيوان وحده.'))
+analysis_labels = [('moisturePercent','الرطوبة','%'),('organicMatterPercent','المادة العضوية','%'),('nitrogenPercent','النيتروجين الكلي N','%'),('phosphorusAsP2O5Percent','الفوسفور P₂O₅','%'),('potassiumAsK2OPercent','البوتاسيوم K₂O','%'),('ec','EC',''),('ph','pH','')]
+analysis_rows = [(label, product.get('analysis', {}).get(key), unit) for key,label,unit in analysis_labels if product.get('analysis', {}).get(key) is not None]
+analysis_html = '<table class="manure-analysis"><tbody>' + ''.join(f'<tr><th>{e(label)}</th><td>{e(value)}{(" " + e(unit)) if unit else ""}</td></tr>' for label,value,unit in analysis_rows) + '</tbody></table>' if analysis_rows else f'<p class="manure-analysis-empty">{e(product.get("analysisNote", "لا توجد نتائج تحليل منشورة لهذه الدفعة."))}</p>'
+analysis_meta = ''.join([f'<span>تاريخ التحليل: {e(product["analysisDate"])}</span>' if product.get('analysisDate') else '', f'<span>أساس التحليل: {e(product["analysisBasis"])}</span>' if product.get('analysisBasis') else ''])
+organic_html += f'<div class="manure-brand-card"><div><span class="manure-brand-kicker">{e(product.get("category", "سماد عضوي حيواني"))}</span><h3>{e(product.get("productName", "سماد الزراعة النظيفة"))}</h3><p>تركيب الدفعة يتغير. لا تستنتج النسب أو الملوحة أو النضج من اسم الحيوان أو المنتج؛ اعتمد تحليل العينة الحالية وملصق المنتج.</p><div class="manure-analysis-meta">{analysis_meta}</div>{analysis_html}</div><a href="https://info-samad.github.io/" target="_blank" rel="noopener noreferrer">زيارة موقع الزراعة النظيفة <span aria-hidden="true">↗</span></a></div>'
 organic_html += '<div class="agri-notice"><strong>قبل أي إضافة داخل البيت:</strong> لا تستخدم الروث الطازج أو غير موثق المعالجة أثناء إنتاج الخضار؛ لا تُحقن منقوعاته في التنقيط. صلاحية المادة تتطلب تقييم النضج والسلامة والملوحة والفوسفور، لا اسم الحيوان أو مدة التخزين فقط.</div>'
 steps = [
     ('01','حلّل أولاً','عينة تربة وماء ري ومادة عضوية ممثلة؛ سجّل EC وطريقة القياس والرطوبة وأساس العناصر.'),
@@ -102,15 +108,30 @@ def asset(path):
         raise ValueError('Invalid brand asset: ' + path)
     return e(path)
 
+allowed_image_sections = {'organicManure','greenhouseSchedules','cropDirectory','farmerTools','plantNutritionGuide','strategicCropRecommendations','diagnosisWizard','calculatorSection'}
+section_image_html = {}
+for image in section_images:
+    section = image.get('section', '')
+    if section not in allowed_image_sections:
+        raise ValueError('Unsupported image section: ' + section)
+    image_path = asset(image.get('file', ''))
+    alt = e(image.get('alt', '').strip())
+    if not alt:
+        raise ValueError('Section image requires useful alt text: ' + image_path)
+    caption = f'<figcaption>{e(image.get("caption", ""))}</figcaption>' if image.get('caption') else ''
+    section_image_html.setdefault(section, []).append(f'<figure class="section-gallery-item"><img src="./{image_path}" alt="{alt}" loading="lazy">{caption}</figure>')
+
 asset(config['logo'])
 barcode = ''
 header_barcode = ''
+footer_qr = ''
 if config.get('barcode'):
     image = asset(config['barcode'])
     label = e(config.get('barcodeLabel','رمز المنصة'))
     url = config.get('barcodeLink', '')
     if url and urlsplit(url).scheme != 'https': raise ValueError('Barcode link must be HTTPS')
     header_barcode = f'<a class="header-barcode" href="#platformBarcode" aria-label="عرض رمز QR المرفق بحجمه الواضح"><img src="./{image}" alt="رمز QR المرفق" width="48" height="48"></a>'
+    footer_qr = f'<a href="#platformBarcode" aria-label="عرض رمز الزراعة النظيفة"><img src="./{image}" alt="رمز QR لموقع الزراعة النظيفة" width="80" height="80" loading="lazy"></a>'
     barcode = section_start('platformBarcode','هوية المنصة',label,'الصورة الأصلية التي زوّد بها صاحب الموقع، دون تغيير محتواها أو توليد بديل.')
     barcode += f'<div class="barcode-wrap"><img class="barcode-image" src="./{image}" alt="{label}" width="1024" height="1024" loading="lazy"><div>'
     if url:
@@ -120,7 +141,7 @@ if config.get('barcode'):
 entry = '<nav class="farmer-entry" aria-label="مسارات المزارع"><a href="#organicManure"><i class="fa-solid fa-leaf" aria-hidden="true"></i>السماد الحيواني والبيوت البلاستيكية</a><a href="#greenhouseSchedules"><i class="fa-solid fa-table-list" aria-hidden="true"></i>جداول الطماطم والخيار</a><a href="#cropDirectory"><i class="fa-solid fa-seedling" aria-hidden="true"></i>دليل المحاصيل والأشجار</a><a href="#farmerTools"><i class="fa-solid fa-calculator" aria-hidden="true"></i>أدوات التسميد والري</a></nav>'
 
 base_url = config.get('publicUrl','').rstrip('/')
-seo = '<meta property="og:type" content="website"><meta property="og:site_name" content="المنصة الاستشارية الزراعية السورية"><meta name="twitter:card" content="summary"><meta name="keywords" content="زراعة سورية، تسميد، سماد عضوي، بيوت بلاستيكية، تغذية النبات">'
+seo = f'<meta property="og:type" content="website"><meta property="og:site_name" content="{e(config.get("title", "الزراعة النظيفة"))}"><meta name="twitter:card" content="summary"><meta name="keywords" content="زراعة سورية، تسميد، سماد عضوي، بيوت بلاستيكية، تغذية النبات">'
 if base_url:
     if urlsplit(base_url).scheme != 'https': raise ValueError('Public URL must be a real HTTPS origin/path')
     seo += f'<link rel="canonical" href="{e(base_url)}/"><meta property="og:url" content="{e(base_url)}/"><meta property="og:image" content="{e(base_url)}/{e(config["logo"])}"><meta name="twitter:image" content="{e(base_url)}/{e(config["logo"])}">'
@@ -130,7 +151,10 @@ else:
 (PUBLIC / 'robots.txt').write_text('User-agent: *\nAllow: /\n' + (f'Sitemap: {base_url}/sitemap.xml\n' if base_url else ''), encoding='utf-8')
 
 html = (ROOT / 'src/index.template.html').read_text(encoding='utf-8')
-replacements = {'ORGANIC_SECTION':organic_html,'GREENHOUSE_SCHEDULES':schedule_html,'CROP_DIRECTORY':directory,'FARMER_TOOLS':(ROOT/'src/farmer-tools-section.html').read_text(encoding='utf-8'),'CROP_OPTIONS':options,'CROP_COUNT':str(len(crops)),'SOURCES_SECTION':sources_html,'BARCODE_SECTION':barcode,'HEADER_BARCODE':header_barcode,'FARMER_ENTRY':entry,'SEO_METADATA':seo}
+contact_email = config.get('contactEmail', '')
+contact_phone = config.get('contactPhone', '')
+contact_phone_uri = re.sub(r'[^0-9+]', '', contact_phone)
+replacements = {'ORGANIC_SECTION':organic_html,'GREENHOUSE_SCHEDULES':schedule_html,'CROP_DIRECTORY':directory,'FARMER_TOOLS':(ROOT/'src/farmer-tools-section.html').read_text(encoding='utf-8'),'CROP_OPTIONS':options,'CROP_COUNT':str(len(crops)),'SOURCES_SECTION':sources_html,'BARCODE_SECTION':barcode,'HEADER_BARCODE':header_barcode,'FOOTER_QR':footer_qr,'FARMER_ENTRY':entry,'SEO_METADATA':seo,'CONTACT_EMAIL':e(contact_email),'CONTACT_PHONE_URI':e(contact_phone_uri),'CONTACT_PHONE_DISPLAY':e(contact_phone)}
 for key,value in replacements.items():
     html = html.replace('@@'+key+'@@',value)
 # Apply only exact original statements verified by the research audit. HTML-level issues are also amended in source template by parent.
@@ -139,6 +163,12 @@ for issue in audit.get('issues', []):
     if original and replacement and '<' not in original:
         html = html.replace(original, e(replacement))
 html = html.replace('./assets/images/logo.png','./'+config['logo'])
+for section, figures in section_image_html.items():
+    gallery = '<div class="section-gallery">' + ''.join(figures) + '</div>'
+    pattern = re.compile(r'(<section\b[^>]*\bid=["\']' + re.escape(section) + r'["\'][^>]*>.*?)(</section>)', re.S)
+    html, matches = pattern.subn(lambda match: match.group(1) + gallery + match.group(2), html, count=1)
+    if matches != 1:
+        raise ValueError('Could not attach section images to: ' + section)
 if re.search(r'@@[A-Z_]+@@',html): raise ValueError('Unresolved build marker')
 (PUBLIC / 'index.html').write_text(html.rstrip()+'\n', encoding='utf-8')
 # Serialize trusted catalogue data, escape HTML-sensitive chars even though this is external JS.

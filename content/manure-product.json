@@ -1,0 +1,17 @@
+{
+  "productName": "سماد الزراعة النظيفة",
+  "category": "سماد عضوي حيواني",
+  "description": "روث الأبقار والأغنام والماعز والدواجن والكمبوست الحيواني مواد متغيرة التركيب؛ لا توجد قيمة NPK ثابتة تُستنتج من اسم الحيوان وحده. اربط قرار الاستخدام بتحليل الدفعة الفعلية وسلامتها واحتياج التربة والمحصول.",
+  "analysisDate": "",
+  "analysisBasis": "",
+  "analysis": {
+    "moisturePercent": null,
+    "organicMatterPercent": null,
+    "nitrogenPercent": null,
+    "phosphorusAsP2O5Percent": null,
+    "potassiumAsK2OPercent": null,
+    "ec": null,
+    "ph": null
+  },
+  "analysisNote": "لا توجد نسب تحليل منشورة في هذا الملف بعد. لا تُدخل قيماً تقديرية؛ أضف نتائج مختبر الدفعة مع تاريخ العينة وأساس التحليل والوحدات."
+}

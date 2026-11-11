@@ -1,9 +1,11 @@
 {
-  "title": "المنصة الاستشارية الزراعية السورية",
+  "title": "الزراعة النظيفة | دليل وإرشاد زراعي",
   "reviewed": "2026-11-11",
   "publicUrl": "",
-  "logo": "assets/images/logo.png",
-  "barcode": "assets/images/platform-qr.jpg",
-  "barcodeLabel": "رمز الموقع المرفق",
-  "barcodeLink": "https://info-samad.github.io/clean-agri/"
+  "logo": "assets/images/clean-agri-logo.svg",
+  "barcode": "assets/images/clean-agri-qr.webp",
+  "barcodeLabel": "رمز الزراعة النظيفة",
+  "barcodeLink": "https://info-samad.github.io/",
+  "contactEmail": "info.samad@mail.com",
+  "contactPhone": "+15049000069"
 }
