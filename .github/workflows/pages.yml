@@ -2,7 +2,7 @@ name: نشر المنصة على GitHub Pages
 
 on:
   push:
-    branches: [main]
+    branches: [main, master]
   workflow_dispatch:
 
 permissions:
@@ -28,6 +28,9 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
+          cache: npm
+      - name: تثبيت اعتماديات الاختبارات
+        run: npm ci
       - name: بناء المحتوى الثابت
         run: python3 scripts/build_site.py
       - name: فحص الروابط والملفات المحلية والحسابات

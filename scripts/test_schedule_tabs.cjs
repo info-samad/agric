@@ -2,7 +2,7 @@
 const fs = require('fs');
 const vm = require('vm');
 const assert = require('node:assert/strict');
-const { parseHTML } = require('/tmp/syragri-dom/node_modules/linkedom');
+const { parseHTML } = require('linkedom');
 const { window } = parseHTML(fs.readFileSync('public/index.html', 'utf8'));
 const { document } = window;
 const context = { window, document, console, Event: window.Event };
