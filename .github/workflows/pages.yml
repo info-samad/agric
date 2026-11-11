@@ -34,6 +34,7 @@ jobs:
         run: |
           python3 scripts/check_site.py
           node scripts/test_calculators.cjs
+          node scripts/test_schedule_tabs.cjs
           for file in public/assets/js/*.js; do node --check "$file"; done
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
