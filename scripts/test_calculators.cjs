@@ -28,6 +28,20 @@ close(dry.analysisMassKg,400); close(dry.totalNKg,8); close(dry.availableNKg,2.4
 close(math.manureNutrients({...manure,analysisBasis:'wet'}).totalNKg,20);
 for (const key of ['moisturePercent','nPercent','p2o5Percent','k2oPercent','nAvailabilityPercent']) invalid(() => math.manureNutrients({...manure,[key]:''}));
 invalid(() => math.manureNutrients({...manure,moisturePercent:101}));
+const manureRate = {rate:'10',rateUnit:'dunum',area:5000,areaUnit:'m2',nutrient:'P2O5',analysisBasis:'dry',moisturePercent:'60',nPercent:'2',p2o5Percent:'1',k2oPercent:'1'};
+const manureRequired = math.manureRequiredMass(manureRate);
+close(manureRequired.targetNutrientKg,50); close(manureRequired.productWetMassKg,12500);
+close(manureRequired.productDryMassKg,5000); close(manureRequired.totalNKg,100);
+close(manureRequired.totalP2O5Kg,50); close(manureRequired.totalK2OKg,50);
+const wetRequirement = math.manureRequiredMass({...manureRate,rate:'2',rateUnit:'dunum',area:1000,areaUnit:'m2',analysisBasis:'wet',moisturePercent:undefined,nutrient:'P2O5',p2o5Percent:'2'});
+close(wetRequirement.productWetMassKg,100); equal(wetRequirement.productDryMassKg,null);
+for (const input of [
+  {...manureRate,moisturePercent:''},
+  {...manureRate,moisturePercent:100},
+  {...manureRate,nutrient:'N',nPercent:0},
+  {...manureRate,p2o5Percent:101},
+  {...manureRate,analysisBasis:''}
+]) invalid(() => math.manureRequiredMass(input));
 close(math.dripUniformity('1,2,3,4').duPercent,40);
 close(math.dripUniformity('۱،۲،۳،۴').duPercent,40);
 close(math.dripUniformity([0,0,2,2]).duPercent,0);

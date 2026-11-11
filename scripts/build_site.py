@@ -50,7 +50,7 @@ def links(ids):
 def section_start(id, kicker, title, intro):
     return f'<section id="{id}" class="agri-section" aria-labelledby="{id}Title"><span class="agri-kicker">{e(kicker)}</span><h2 id="{id}Title">{e(title)}</h2><p>{e(intro)}</p><span class="agri-review">مراجعة المصادر: {e(reviewed)}</span>'
 
-organic_html = section_start('organicManure','سماد الزراعة النظيفة · السماد العضوي الحيواني',organic['title'],product.get('description', 'روث الأبقار والأغنام والماعز والدواجن مواد متغيرة التركيب؛ لا توجد قيمة NPK ثابتة تُستنتج من اسم الحيوان وحده.'))
+organic_html = section_start('organicManure','تحذيرات السماد العضوي الحيواني · الاستخدام غير الآمن',organic['title'],product.get('description', 'روث الأبقار والأغنام والماعز والدواجن مواد متغيرة التركيب؛ لا توجد قيمة NPK ثابتة تُستنتج من اسم الحيوان وحده.'))
 analysis_labels = [('moisturePercent','الرطوبة','%'),('organicMatterPercent','المادة العضوية','%'),('nitrogenPercent','النيتروجين الكلي N','%'),('phosphorusAsP2O5Percent','الفوسفور P₂O₅','%'),('potassiumAsK2OPercent','البوتاسيوم K₂O','%'),('ec','EC',''),('ph','pH','')]
 analysis_rows = [(label, product.get('analysis', {}).get(key), unit) for key,label,unit in analysis_labels if product.get('analysis', {}).get(key) is not None]
 analysis_html = '<table class="manure-analysis"><tbody>' + ''.join(f'<tr><th>{e(label)}</th><td>{e(value)}{(" " + e(unit)) if unit else ""}</td></tr>' for label,value,unit in analysis_rows) + '</tbody></table>' if analysis_rows else f'<p class="manure-analysis-empty">{e(product.get("analysisNote", "لا توجد نتائج تحليل منشورة لهذه الدفعة."))}</p>'
@@ -65,7 +65,7 @@ steps = [
 organic_html += '<div class="organic-workflow">' + ''.join(f'<article class="organic-step"><span class="organic-step-number">{n}</span><h3>{e(t)}</h3><p>{e(p)}</p></article>' for n,t,p in steps) + '</div>'
 for record in organic['paragraphs']:
     organic_html += f'<details class="agri-details"><summary>{e(record["heading"])}</summary><p>{e(record["text"])}</p>{links(record["sourceIds"])}</details>'
-organic_html += '<p class="crop-directory-help">تُطبّق هذه المبادئ على زراعة التربة، لا الزراعة المائية. لا تُستخدم أرقام المعايير الأجنبية بوصفها تشريعاً سورياً أو جرعات سورية.</p><a class="secondary-button" href="#farmerTools">احسب مساهمة سمادك من التحليل</a></section>'
+organic_html += '<p class="crop-directory-help">تُطبّق هذه المبادئ على زراعة التربة، لا الزراعة المائية. لا تُستخدم أرقام المعايير الأجنبية بوصفها تشريعاً سورياً أو جرعات سورية.</p><a class="secondary-button" href="#ftManureRateCard">احسب كمية الدفعة من تحليلها</a></section>'
 
 def schedule_table(schedule):
     head = ''.join(f'<th>{e(col)}</th>' for col in schedule['columns'])
@@ -141,7 +141,7 @@ if config.get('barcode'):
 entry = '<nav class="farmer-entry" aria-label="مسارات المزارع"><a href="#organicManure"><i class="fa-solid fa-leaf" aria-hidden="true"></i>السماد الحيواني والبيوت البلاستيكية</a><a href="#greenhouseSchedules"><i class="fa-solid fa-table-list" aria-hidden="true"></i>جداول الطماطم والخيار</a><a href="#cropDirectory"><i class="fa-solid fa-seedling" aria-hidden="true"></i>دليل المحاصيل والأشجار</a><a href="#farmerTools"><i class="fa-solid fa-calculator" aria-hidden="true"></i>أدوات التسميد والري</a></nav>'
 
 base_url = config.get('publicUrl','').rstrip('/')
-seo = f'<meta property="og:type" content="website"><meta property="og:site_name" content="{e(config.get("title", "الزراعة النظيفة"))}"><meta name="twitter:card" content="summary"><meta name="keywords" content="زراعة سورية، تسميد، سماد عضوي، بيوت بلاستيكية، تغذية النبات">'
+seo = f'<meta property="og:type" content="website"><meta property="og:site_name" content="{e(config.get("title", "المنصة الاستشارية للزراعة الذكية"))}"><meta name="twitter:card" content="summary"><meta name="keywords" content="زراعة سورية، تسميد، سماد عضوي، بيوت بلاستيكية، تغذية النبات">'
 if base_url:
     if urlsplit(base_url).scheme != 'https': raise ValueError('Public URL must be a real HTTPS origin/path')
     seo += f'<link rel="canonical" href="{e(base_url)}/"><meta property="og:url" content="{e(base_url)}/"><meta property="og:image" content="{e(base_url)}/{e(config["logo"])}"><meta name="twitter:image" content="{e(base_url)}/{e(config["logo"])}">'

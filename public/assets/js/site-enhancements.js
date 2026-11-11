@@ -48,19 +48,34 @@
       showAllButton?.setAttribute('aria-pressed', 'true');
       if (hubStatus) hubStatus.textContent = 'تُعرض جميع أقسام المنصة الطويلة في صفحة واحدة.';
     }
+    function focusTarget(id, scroll = true) {
+      const target = document.getElementById(id);
+      if (!target || !setFocus(id)) return false;
+      let disclosure = target.closest('details');
+      while (disclosure) {
+        disclosure.open = true;
+        disclosure = disclosure.parentElement?.closest('details') || null;
+      }
+      try {
+        if (window.history?.replaceState) window.history.replaceState(null, '', `#${encodeURIComponent(id)}`);
+        else if (window.location) window.location.hash = `#${encodeURIComponent(id)}`;
+      } catch (_) { /* Focusing still works if the host blocks history updates. */ }
+      if (scroll) target.scrollIntoView?.({ behavior: 'smooth', block: 'start' });
+      return true;
+    }
     focusLinks.forEach(link => link.addEventListener('click', event => {
-      if (setFocus(link.dataset.focusSection)) event.preventDefault();
+      if (focusTarget(link.dataset.focusSection)) event.preventDefault();
     }));
     showAllButton?.addEventListener('click', showAll);
-    main?.addEventListener('click', event => {
-      const anchor = event.target.closest('a[href^="#"]');
+    document.addEventListener('click', event => {
+      const anchor = event.target?.closest?.('a[href^="#"]');
       if (!anchor || anchor.hasAttribute('data-focus-section')) return;
       const id = decodeURIComponent(anchor.getAttribute('href').slice(1));
-      if (id) setFocus(id);
+      if (id && focusTarget(id)) event.preventDefault();
     });
     const initialHash = window.location?.hash || '';
     const initialId = initialHash ? decodeURIComponent(initialHash.slice(1)) : 'monthlyGuidance';
-    if (!setFocus(initialId)) setFocus('monthlyGuidance');
+    if (!focusTarget(initialId, Boolean(initialHash))) focusTarget('monthlyGuidance', false);
 
     const scheduleTabs = document.querySelectorAll('[data-schedule-target]');
     const scheduleCards = document.querySelectorAll('[data-schedule-card]');

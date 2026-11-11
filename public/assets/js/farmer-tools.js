@@ -128,6 +128,42 @@
     return { amount, from: input.from, to: input.to, factor, convertedAmount: finiteResult(amount * factor) };
   }
 
+  /** manureRequiredMass({rate,rateUnit:'ha'|'dunum',area,areaUnit,
+   * nutrient:'N'|'P2O5'|'K2O',analysisBasis:'wet'|'dry',moisturePercent?,
+   * nPercent,p2o5Percent,k2oPercent}).
+   * Inverts a user-entered total-element target; it is not an agronomic rate
+   * or first-season available-N target. All analyses describe one batch.
+   */
+  function manureRequiredMass(input = {}) {
+    const rate = numeric(input.rate, 'معدل العنصر الكلي المدخل', 'rate');
+    const rateUnit = choice(input.rateUnit, ['ha', 'dunum'], 'وحدة المعدل', 'rateUnit');
+    const areaSquareMetres = squareMetres(input.area, input.areaUnit);
+    const nutrient = choice(input.nutrient, NUTRIENTS, 'العنصر الكلي المستهدف', 'nutrient');
+    const analysisBasis = choice(input.analysisBasis, ['wet', 'dry'], 'أساس تحليل الدفعة', 'analysisBasis');
+    let moisturePercent = null;
+    if (analysisBasis === 'dry') moisturePercent = numeric(input.moisturePercent, 'رطوبة الدفعة (%)', 'moisturePercent', 100);
+    const nPercent = numeric(input.nPercent, 'N في التحليل (%)', 'nPercent', 100);
+    const p2o5Percent = numeric(input.p2o5Percent, 'P₂O₅ في التحليل (%)', 'p2o5Percent', 100);
+    const k2oPercent = numeric(input.k2oPercent, 'K₂O في التحليل (%)', 'k2oPercent', 100);
+    const nutrientPercent = { N: nPercent, P2O5: p2o5Percent, K2O: k2oPercent }[nutrient];
+    if (nutrientPercent === 0) fail(`نسبة ${nutrient === 'P2O5' ? 'P₂O₅' : nutrient === 'K2O' ? 'K₂O' : nutrient} تساوي صفراً؛ لا يمكن تحديد كتلة منتج تزود العنصر.`, 'nutrient');
+    const dryMatterFraction = analysisBasis === 'dry' ? 1 - moisturePercent / 100 : 1;
+    if (dryMatterFraction === 0) fail('رطوبة 100% تعني عدم وجود مادة جافة للحساب على أساس جاف.', 'moisturePercent');
+    const areaInRateUnits = areaSquareMetres / AREA_UNITS[rateUnit];
+    const targetNutrientKg = finiteResult(rate * areaInRateUnits);
+    const productWetMassKg = finiteResult(targetNutrientKg / ((nutrientPercent / 100) * dryMatterFraction));
+    const productDryMassKg = analysisBasis === 'dry' ? finiteResult(productWetMassKg * dryMatterFraction) : null;
+    const analysisMassKg = analysisBasis === 'dry' ? productDryMassKg : productWetMassKg;
+    return {
+      rate, rateUnit, areaSquareMetres, areaInRateUnits, nutrient, analysisBasis, moisturePercent,
+      dryMatterFraction, nPercent, p2o5Percent, k2oPercent, nutrientPercent,
+      targetNutrientKg, productWetMassKg, productDryMassKg,
+      totalNKg: finiteResult(analysisMassKg * nPercent / 100),
+      totalP2O5Kg: finiteResult(analysisMassKg * p2o5Percent / 100),
+      totalK2OKg: finiteResult(analysisMassKg * k2oPercent / 100)
+    };
+  }
+
   /** manureNutrients({wetMass,analysisBasis:'wet'|'dry',moisturePercent?,
    * nPercent,p2o5Percent,k2oPercent,nAvailabilityPercent,nGoalKg?}).
    * Each analysis percentage and first-season N availability is mandatory.
@@ -208,7 +244,7 @@
 
   const api = Object.freeze({
     AREA_UNITS, OXIDE_FACTORS, normalizeNumberText, parseNonNegativeNumber,
-    convertArea, fertilizerMass, convertOxide, manureNutrients,
+    convertArea, fertilizerMass, manureRequiredMass, convertOxide, manureNutrients,
     parseDischargeReadings, dripUniformity
   });
   if (typeof module !== 'undefined' && module.exports) module.exports = api;
@@ -248,6 +284,9 @@
     }
     if (form.dataset.ftCalculator === 'manure') {
       toggleFields(form.querySelector('[data-ft-moisture-field]'), valueOf(form, 'analysisBasis') === 'dry');
+    }
+    if (form.dataset.ftCalculator === 'manure-rate') {
+      toggleFields(form.querySelector('[data-ft-manure-rate-moisture]'), valueOf(form, 'analysisBasis') === 'dry');
     }
   }
 
@@ -351,6 +390,18 @@
       notes.push(`الكتلة الرطبة المدخلة: ${format(result.wetMass)} كغ. أساس التحليل: ${result.analysisBasis === 'dry' ? `جاف؛ الرطوبة ${format(result.moisturePercent)}٪؛ الكتلة الجافة ${format(result.analysisMassKg)} كغ` : 'رطب؛ لا يُطبق تصحيح رطوبة'}.`,
         `نسب التحليل المدخلة: N ${format(result.nPercent)}٪، P₂O₅ ${format(result.p2o5Percent)}٪، K₂O ${format(result.k2oPercent)}٪. إتاحة N التي أدخلتها: ${format(result.nAvailabilityPercent)}٪.`,
         'لم تُفترض إتاحة لـP₂O₅ أو K₂O. النضج وEC ومسببات الأمراض وحدود الفوسفور قد تمنع الاستخدام بصورة مستقلة. لا يُحسب معدل إضافة السماد العضوي.');
+    } else if (type === 'manure-rate') {
+      const result = manureRequiredMass(input);
+      title = 'كتلة السماد العضوي المقابلة لهدف العنصر الكلي المدخل';
+      rows.push(['الكتلة الرطبة النظرية للمنتج', `${format(result.productWetMassKg)} كغ`]);
+      if (result.productDryMassKg !== null) rows.push(['الكتلة الجافة المحسوبة', `${format(result.productDryMassKg)} كغ`]);
+      rows.push([`الهدف الكلي المدخل من ${nutrientLabels[result.nutrient]}`, `${format(result.targetNutrientKg)} كغ`],
+        ['N الكلي المحمول بهذه الكتلة', `${format(result.totalNKg)} كغ`],
+        ['P₂O₅ الكلي المحمول بهذه الكتلة', `${format(result.totalP2O5Kg)} كغ`],
+        ['K₂O الكلي المحمول بهذه الكتلة', `${format(result.totalK2OKg)} كغ`]);
+      notes.push(`الهدف الحسابي: ${format(result.rate)} كغ ${nutrientLabels[result.nutrient]} كلي / ${unitLabels[result.rateUnit]} على مساحة ${format(result.areaSquareMetres)} م². أساس التحليل: ${result.analysisBasis === 'dry' ? `مادة جافة؛ رطوبة ${format(result.moisturePercent)}٪` : 'وزن مستلم'}.`,
+        `نسب هذه الدفعة: N ${format(result.nPercent)}٪، P₂O₅ ${format(result.p2o5Percent)}٪، K₂O ${format(result.k2oPercent)}٪.`,
+        'النتيجة عكسية حسابية لهدف عنصر كلي أدخلته أنت وليست جرعة زراعية أو ضماناً لـN المتاح في الموسم الأول. لا تستخدم الهدف لحساب N متاح دون معامل إتاحة موثق؛ وافحص الملوحة والنضج والممرضات والفوسفور وحدود الإضافة قبل التطبيق.');
     } else if (type === 'drip') {
       const result = dripUniformity(input.readings);
       title = 'انتظام التوزيع للربع الأدنى (DU)';

@@ -96,8 +96,33 @@
       </div>
     </details>
 
+    <details class="ft-tool" id="ftManureRateCard">
+      <summary><span class="ft-number" aria-hidden="true">04</span><span><strong>كمية السماد العضوي الحيواني بحسب التحليل</strong><small>كتلة حسابية من هدف عنصر كلي مدخل، وليست جرعة موصى بها</small></span></summary>
+      <div class="ft-tool-body">
+        <p class="ft-caution"><strong>استخدمها فقط بعد تحليل مخبري ممثل للدفعة.</strong> أدخل هدف العنصر الكلي من توصية مستقلة مناسبة للحقل. لا تستنتج الهدف من اسم الحيوان، ولا تستخدم N الكلي على أنه N متاح في الموسم الأول. النتيجة لا تعني أن المادة ناضجة أو قليلة الملوحة أو آمنة صحياً.</p>
+        <form data-ft-calculator="manure-rate" novalidate autocomplete="off">
+          <div class="ft-grid">
+            <div class="ft-field"><label for="ftManureRate">هدف العنصر الكلي (كغ/وحدة المساحة)</label><input id="ftManureRate" name="rate" type="text" inputmode="decimal" required></div>
+            <div class="ft-field"><label for="ftManureRateUnit">وحدة هدف العنصر</label><select id="ftManureRateUnit" name="rateUnit" required><option value="">اختر الوحدة</option><option value="dunum">لكل دونم (1000 م²)</option><option value="ha">لكل هكتار (10000 م²)</option></select></div>
+            <div class="ft-field"><label for="ftManureRateNutrient">العنصر الكلي الذي بُني عليه الهدف</label><select id="ftManureRateNutrient" name="nutrient" required><option value="">اختر العنصر</option><option value="N">N — نيتروجين كلي</option><option value="P2O5">P₂O₅ كلي</option><option value="K2O">K₂O كلي</option></select></div>
+            <div class="ft-field"><label for="ftManureRateArea">مساحة التطبيق</label><input id="ftManureRateArea" name="area" type="text" inputmode="decimal" required></div>
+            <div class="ft-field"><label for="ftManureRateAreaUnit">وحدة المساحة</label><select id="ftManureRateAreaUnit" name="areaUnit" required><option value="">اختر الوحدة</option><option value="m2">متر مربع (م²)</option><option value="dunum">دونم (1000 م²)</option><option value="ha">هكتار (10000 م²)</option></select></div>
+            <div class="ft-field"><label for="ftManureRateBasis">أساس النسب في تقرير التحليل</label><select id="ftManureRateBasis" name="analysisBasis" required><option value="">اختر من التقرير</option><option value="wet">الوزن المستلم (رطب)</option><option value="dry">المادة الجافة</option></select></div>
+            <div class="ft-field ft-span-all" data-ft-manure-rate-moisture hidden><label for="ftManureRateMoisture">رطوبة الدفعة على أساس الوزن الرطب (%)</label><input id="ftManureRateMoisture" name="moisturePercent" type="text" inputmode="decimal" required disabled><small>مطلوبة فقط إذا كانت نسب N وP₂O₅ وK₂O في التحليل محسوبة على أساس المادة الجافة.</small></div>
+            <div class="ft-field"><label for="ftManureRateN">N الكلي في التحليل (%)</label><input id="ftManureRateN" name="nPercent" type="text" inputmode="decimal" required></div>
+            <div class="ft-field"><label for="ftManureRateP">P₂O₅ الكلي في التحليل (%)</label><input id="ftManureRateP" name="p2o5Percent" type="text" inputmode="decimal" required></div>
+            <div class="ft-field"><label for="ftManureRateK">K₂O الكلي في التحليل (%)</label><input id="ftManureRateK" name="k2oPercent" type="text" inputmode="decimal" required></div>
+          </div>
+          <p class="ft-formula">الكتلة الرطبة المحسوبة = كمية العنصر الكلي المستهدفة ÷ (نسبة العنصر في التحليل × كسر المادة الجافة عند الحاجة).</p>
+          <div class="ft-actions"><button type="submit" class="ft-button">احسب الكمية النظرية</button><button type="reset" class="ft-button ft-button-secondary">مسح</button><button type="button" class="ft-button ft-button-secondary" data-ft-download disabled>تنزيل النتيجة نصياً</button></div>
+          <div class="ft-result" data-ft-result role="status" aria-live="polite" aria-atomic="true"><p>أدخل هدفاً مستقلاً، مساحة الدفعة المعاملة، ونسب تحليل الدفعة الحالية.</p></div>
+        </form>
+        <p class="ft-help">تُعرض العناصر الكلية التي ستدخل مع الكتلة المحسوبة كي يمكن مراجعة تحميل P₂O₅ وK₂O قبل التطبيق. لا تحوّل الناتج إلى جرعة آمنة قبل فحص نضج المادة وEC ومسببات الأمراض وتراكم الفوسفور ومياه الري وتوصية محلية.</p>
+      </div>
+    </details>
+
     <details class="ft-tool">
-      <summary><span class="ft-number" aria-hidden="true">04</span><span><strong>انتظام تصريف نقاط التنقيط</strong><small>حساب انتظام التوزيع للربع الأدنى (DU)</small></span></summary>
+      <summary><span class="ft-number" aria-hidden="true">05</span><span><strong>انتظام تصريف نقاط التنقيط</strong><small>حساب انتظام التوزيع للربع الأدنى (DU)</small></span></summary>
       <div class="ft-tool-body">
         <p class="ft-help">خذ قراءات من نقاط ممثلة لبداية الشبكة ووسطها ونهايتها وتفاوت المناسيب، بوحدة وزمن قياس موحدين؛ لا تجعل أربع قراءات متجاورة حكماً على شبكة كاملة. مرجع الصيغة: <a href="https://ucanr.edu/site/maintenance-microirrigation-systems/calculation-drip-application-rate-gph-hr" target="_blank" rel="noopener noreferrer">جامعة كاليفورنيا — انتظام تصريف نقاط التنقيط</a>. تقريب الربع لعدد غير مضاعف لأربعة خيار حسابي معلن في هذه الأداة، وليس بروتوكول أخذ عينات موصى به.</p>
         <form data-ft-calculator="drip" novalidate autocomplete="off">

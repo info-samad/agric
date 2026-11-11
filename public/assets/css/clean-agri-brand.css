@@ -4,6 +4,10 @@ body{font-family:'Noto Sans Arabic','DM Sans',sans-serif!important;background-co
 body>header{background:var(--clean-deep)!important;border-bottom-color:var(--clean-gold)!important;box-shadow:0 12px 34px #122e2324!important}
 .site-header-row{min-height:82px!important}
 .site-brand h1{letter-spacing:-.02em}
+.site-brand-copy h1{font-size:clamp(.8rem,1.2vw,1.05rem)!important;line-height:1.65}
+.header-barcode{min-width:64px;min-height:64px;padding:.25rem}
+.header-barcode img{width:64px!important;height:64px!important}
+.barcode-image{width:320px!important;max-width:100%;height:auto}
 .site-mobile-nav{background:#122e23f2!important;border-top:1px solid #d5b36a55!important;backdrop-filter:blur(14px)}
 .site-mobile-nav-link{color:#fffdf4!important}
 .advisor-dashboard,.content-panel,.agri-section,.section-hub,.monthly-guidance{border-color:var(--clean-border)!important;border-radius:18px!important;box-shadow:0 12px 34px #263d310d!important}
@@ -28,6 +32,6 @@ button,.secondary-button,.primary-button{border-radius:12px}
 .manure-analysis{width:100%;margin-top:.7rem;border-collapse:collapse;font-size:.78rem}.manure-analysis th,.manure-analysis td{border-bottom:1px solid var(--clean-border);padding:.45rem .6rem;text-align:right}.manure-analysis th{color:var(--clean-forest)}.manure-analysis-empty{padding:.6rem .75rem;border-radius:10px;background:#fffdf4;color:#687463;font-size:.75rem;line-height:1.8}.manure-analysis-meta{display:flex;flex-wrap:wrap;gap:.4rem .9rem;margin-top:.5rem;color:#697361;font-size:.7rem}
 .consultation-body{font-family:'Noto Sans Arabic','DM Sans',sans-serif!important;background:var(--clean-cream)!important;color:var(--clean-ink)!important}
 .consultation-header{background:var(--clean-deep)!important;border-bottom:2px solid var(--clean-gold)!important}
-@media(max-width:600px){.site-contact-links{flex-direction:column;gap:.4rem}.section-gallery{grid-template-columns:1fr}.section-gallery-item img{max-height:280px}}
+@media(max-width:600px){.site-contact-links{flex-direction:column;gap:.4rem}.section-gallery{grid-template-columns:1fr}.section-gallery-item img{max-height:280px}.header-barcode{min-width:52px;min-height:52px}.header-barcode img{width:52px!important;height:52px!important}.barcode-image{width:280px!important}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
 @media print{.section-gallery-item,.manure-brand-card{break-inside:avoid}}
