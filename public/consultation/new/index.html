@@ -1,122 +1,112 @@
-<!doctype html>
-<html lang="ar" dir="rtl">
+<!DOCTYPE html>
+
+<html dir="rtl" lang="ar">
 <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <meta name="theme-color" content="#163b27">
-    <title>استشارة زراعية جديدة | المنصة الاستشارية الزراعية</title>
-    <link rel="stylesheet" href="../../assets/fontawesome/css/all.min.css">
-    <link rel="stylesheet" href="../../assets/css/site.css">
-    <link rel="stylesheet" href="../../assets/css/site-overrides.css">
-</head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<meta content="#163b27" name="theme-color"/>
+<title>استشارة زراعية جديدة | المنصة الاستشارية الزراعية</title>
+<link href="../../assets/fontawesome/css/all.min.css" rel="stylesheet"/>
+<link href="../../assets/css/site.css" rel="stylesheet"/>
+<link href="../../assets/css/site-overrides.css" rel="stylesheet"/>
+<meta content="نموذج محلي لتنظيم بيانات الحقل والمحصول والتحليل قبل مراجعة المرشد. لا يرسل البيانات ولا يحفظها." name="description"/><link href="../../assets/images/logo.png" rel="icon" type="image/png"/></head>
 <body class="consultation-body">
-    <header class="consultation-header">
-        <div class="consultation-header-inner">
-            <a class="consultation-brand" href="../../" aria-label="العودة إلى المنصة الاستشارية الزراعية">
-                <span class="consultation-logo-frame"><img id="consultationAppLogo" src="../../assets/images/شعار.png" alt="شعار المنصة الزراعية" width="52" height="52"></span>
-                <span class="consultation-brand-copy"><strong>المنصة الاستشارية الزراعية</strong><small>مساحة عمل المستشار الزراعي</small></span>
-            </a>
-            <a class="consultation-back" href="../../#dashboardStats"><i class="fa-solid fa-arrow-right" aria-hidden="true"></i> العودة إلى لوحة التحكم</a>
-        </div>
-    </header>
-
-    <main class="consultation-page">
-        <div class="consultation-intro">
-            <span class="consultation-eyebrow"><i class="fa-solid fa-file-circle-plus" aria-hidden="true"></i> نموذج تجريبي للعرض فقط</span>
-            <h1>إدخال استشارة زراعية جديدة</h1>
-            <p>رتّب معلومات الحقل والتحليل والأعراض في نموذج واحد. هذه الصفحة نموذج واجهة فقط؛ لا ترسل ولا تحفظ المدخلات.</p>
-        </div>
-
-        <aside class="consultation-privacy" role="note">
-            <i class="fa-solid fa-shield-halved" aria-hidden="true"></i>
-            <p><strong>تنبيه الخصوصية:</strong> لا تستخدم بيانات شخصية حساسة. لا تُرسل قيم الحقول أو الملفات، ولا تُخزَّن على الموقع؛ تختفي المدخلات عند مغادرة الصفحة أو إعادة تحميلها.</p>
-        </aside>
-
-        <form id="consultationDemoForm" class="consultation-form" autocomplete="off">
-            <fieldset class="consultation-fieldset">
-                <legend><span class="consultation-legend-icon"><i class="fa-solid fa-location-dot" aria-hidden="true"></i></span> بيانات المحصول والحقل</legend>
-                <div class="consultation-form-grid">
-                    <div class="consultation-field">
-                        <label for="demoCrop">المحصول <span aria-hidden="true">*</span></label>
-                        <select id="demoCrop" class="field-control" required>
-                            <option value="">اختر المحصول</option>
-                            <option>قمح</option><option>قطن</option><option>فستق حلبي</option><option>خضار</option><option>أشجار مثمرة أخرى</option><option>محصول آخر</option>
-                        </select>
-                    </div>
-                    <div class="consultation-field">
-                        <label for="demoGovernorate">المحافظة</label>
-                        <select id="demoGovernorate" class="field-control">
-                            <option value="">اختر المحافظة</option><option>دمشق</option><option>ريف دمشق</option><option>حلب</option><option>حمص</option><option>حماة</option><option>اللاذقية</option><option>طرطوس</option><option>إدلب</option><option>الحسكة</option><option>دير الزور</option><option>الرقة</option><option>درعا</option><option>السويداء</option><option>القنيطرة</option>
-                        </select>
-                    </div>
-                    <div class="consultation-field">
-                        <label for="demoVariety">الصنف (اختياري)</label>
-                        <input id="demoVariety" class="field-control" type="text" placeholder="اسم الصنف إن كان معروفاً">
-                    </div>
-                    <div class="consultation-field">
-                        <label for="demoStage">مرحلة نمو المحصول</label>
-                        <select id="demoStage" class="field-control">
-                            <option value="">اختر المرحلة</option><option>إنبات أو بادرات</option><option>نمو خضري</option><option>تزهير</option><option>عقد أو تكوين ثمار</option><option>امتلاء أو نضج</option><option>بعد الحصاد</option><option>غير متأكد</option>
-                        </select>
-                    </div>
-                    <div class="consultation-field">
-                        <label for="demoIrrigation">مصدر أو طريقة الري</label>
-                        <select id="demoIrrigation" class="field-control">
-                            <option value="">اختر إن توفر</option><option>مطرية</option><option>سطحي</option><option>تنقيط</option><option>رش</option><option>مصدر آخر</option><option>غير معروف</option>
-                        </select>
-                    </div>
-                    <div class="consultation-field consultation-field-area">
-                        <label for="demoArea">المساحة التقريبية (اختياري)</label>
-                        <div class="consultation-inline-fields">
-                            <input id="demoArea" class="field-control" type="number" min="0.1" step="0.1" inputmode="decimal" placeholder="مثال: 5">
-                            <select id="demoAreaUnit" class="field-control" aria-label="وحدة المساحة"><option>دونم</option><option>هكتار</option></select>
-                        </div>
-                    </div>
-                </div>
-            </fieldset>
-
-            <fieldset class="consultation-fieldset">
-                <legend><span class="consultation-legend-icon consultation-legend-blue"><i class="fa-solid fa-flask" aria-hidden="true"></i></span> قراءات التربة والمياه (إن توفرت)</legend>
-                <p class="consultation-field-hint">أدخل القيم كما وردت في تقرير المختبر، مع الوحدة وتاريخ العينة؛ لا تُقدّر الأرقام بالتخمين.</p>
-                <div class="consultation-form-grid consultation-form-grid-advanced">
-                    <div class="consultation-field"><label for="demoSoilPh">pH التربة</label><div class="consultation-unit-field"><input id="demoSoilPh" class="field-control" type="number" min="0" max="14" step="0.1" inputmode="decimal" placeholder="من التقرير"><span>pH</span></div></div>
-                    <div class="consultation-field"><label for="demoSoilEc">التوصيل الكهربائي للتربة</label><div class="consultation-unit-field"><input id="demoSoilEc" class="field-control" type="number" min="0" step="0.01" inputmode="decimal" placeholder="من التقرير"><span>dS/m</span></div></div>
-                    <div class="consultation-field"><label for="demoWaterEc">التوصيل الكهربائي لماء الري</label><div class="consultation-unit-field"><input id="demoWaterEc" class="field-control" type="number" min="0" step="0.01" inputmode="decimal" placeholder="من التقرير"><span>dS/m</span></div></div>
-                    <div class="consultation-field"><label for="demoMoisture">رطوبة منطقة الجذور (اختياري)</label><div class="consultation-unit-field"><input id="demoMoisture" class="field-control" type="number" min="0" max="100" step="1" inputmode="numeric" placeholder="قراءة القياس"><span>%</span></div></div>
-                    <div class="consultation-field"><label for="demoSampleDate">تاريخ أخذ العينة أو القياس</label><input id="demoSampleDate" class="field-control" type="date"></div>
-                    <div class="consultation-field"><label for="demoMeasureMethod">طريقة القياس أو مرجع المختبر</label><input id="demoMeasureMethod" class="field-control" type="text" placeholder="اختياري؛ اذكر الطريقة إن عُرفت"></div>
-                </div>
-            </fieldset>
-
-            <fieldset class="consultation-fieldset">
-                <legend><span class="consultation-legend-icon consultation-legend-gold"><i class="fa-solid fa-notes-medical" aria-hidden="true"></i></span> وصف الحالة الزراعية</legend>
-                <div class="consultation-form-grid">
-                    <div class="consultation-field consultation-field-full">
-                        <label for="demoIssue">ما الملاحظة أو السؤال الذي تريد مناقشته؟ <span aria-hidden="true">*</span></label>
-                        <textarea id="demoIssue" class="field-control consultation-textarea" rows="5" maxlength="1200" required placeholder="صف الأعراض، موضعها على النبات، وقت ظهورها، وتوزعها في الحقل. أضف ما تعرفه عن الري والطقس الأخير."></textarea>
-                    </div>
-                    <div class="consultation-field consultation-field-full">
-                        <label for="demoRecentInputs">معاملات أو إضافات حديثة (اختياري)</label>
-                        <textarea id="demoRecentInputs" class="field-control consultation-textarea" rows="3" maxlength="800" placeholder="اسم المنتج كما على الملصق، وتاريخ وطريقة الاستخدام إن وجدت."></textarea>
-                    </div>
-                    <div class="consultation-field consultation-field-full">
-                        <label for="demoAttachments">صور أو تقرير تحليل (اختياري)</label>
-                        <input id="demoAttachments" class="field-control consultation-file-input" type="file" accept="image/*,.pdf" multiple>
-                        <small class="consultation-field-hint">اختيار الملف لا يرفعه؛ المرفقات محلية في المتصفح فقط ولا تُحفظ أو تُرسل.</small>
-                    </div>
-                </div>
-            </fieldset>
-
-            <div class="consultation-actions">
-                <button class="primary-button" id="demoPreviewButton" type="button"><i class="fa-solid fa-eye" aria-hidden="true"></i> عرض تنبيه النموذج التجريبي</button>
-                <button class="secondary-button" type="reset"><i class="fa-solid fa-rotate-left" aria-hidden="true"></i> مسح المدخلات من الصفحة</button>
-            </div>
-            <p id="demoFeedback" class="consultation-feedback" role="status" aria-live="polite" tabindex="-1" hidden></p>
-        </form>
-
-        <p class="consultation-footer-note"><i class="fa-solid fa-circle-info" aria-hidden="true"></i> هذه واجهة شكلية لا تقدم تشخيصاً ولا تحفظ سجلاً للاستشارات. القرار الزراعي يتطلب سياق المحصول والمنطقة والمرحلة وتحليلاً مناسباً عند الحاجة.</p>
-    </main>
-
-    <script src="../../assets/js/consultation-demo.js" defer></script>
+<header class="consultation-header">
+<div class="consultation-header-inner">
+<a aria-label="العودة إلى المنصة الاستشارية الزراعية" class="consultation-brand" href="../../index.html">
+<span class="consultation-logo-frame"><img alt="شعار المنصة الزراعية" height="672" id="consultationAppLogo" src="../../assets/images/logo.png" width="506"/></span>
+<span class="consultation-brand-copy"><strong>المنصة الاستشارية الزراعية</strong><small>مساحة عمل المستشار الزراعي</small></span>
+</a>
+<a class="consultation-back" href="../../index.html#dashboardStats"><i aria-hidden="true" class="fa-solid fa-arrow-right"></i> العودة إلى لوحة التحكم</a>
+</div>
+</header>
+<main class="consultation-page">
+<div class="consultation-intro">
+<span class="consultation-eyebrow"><i aria-hidden="true" class="fa-solid fa-file-circle-plus"></i> نموذج تجريبي للعرض فقط</span>
+<h1>إدخال استشارة زراعية جديدة</h1>
+<p>رتّب معلومات الحقل والتحليل والأعراض في نموذج واحد. هذه الصفحة نموذج واجهة فقط؛ لا ترسل ولا تحفظ المدخلات.</p>
+</div>
+<aside class="consultation-privacy" role="note">
+<i aria-hidden="true" class="fa-solid fa-shield-halved"></i>
+<p><strong>تنبيه الخصوصية:</strong> لا تستخدم بيانات شخصية حساسة. لا تُرسل قيم الحقول أو الملفات، ولا تُخزَّن على الموقع؛ تختفي المدخلات عند مغادرة الصفحة أو إعادة تحميلها.</p>
+</aside>
+<form autocomplete="off" class="consultation-form" id="consultationDemoForm">
+<fieldset class="consultation-fieldset">
+<legend><span class="consultation-legend-icon"><i aria-hidden="true" class="fa-solid fa-location-dot"></i></span> بيانات المحصول والحقل</legend>
+<div class="consultation-form-grid">
+<div class="consultation-field">
+<label for="demoCrop">المحصول <span aria-hidden="true">*</span></label>
+<select class="field-control" id="demoCrop" required=""><option value="">اختر المحصول</option><optgroup label="الحبوب"><option value="wheat">القمح</option><option value="barley">الشعير</option><option value="maize">الذرة الصفراء والعلفية</option></optgroup><optgroup label="المحاصيل الحقلية والصناعية"><option value="cotton">القطن</option><option value="sugar-beet">الشوندر السكري</option><option value="tobacco">التبغ</option><option value="sunflower">دوار الشمس</option></optgroup><optgroup label="البقوليات الغذائية"><option value="lentil">العدس</option><option value="chickpea">الحمص</option><option value="broad-bean">الفول العريض</option><option value="pea">البازلاء</option></optgroup><optgroup label="الأعلاف"><option value="alfalfa">الفصة (البرسيم الحجازي)</option><option value="vetch">البيقية العلفية</option></optgroup><optgroup label="الخضر المكشوفة"><option value="potato">البطاطا</option><option value="onion">البصل</option><option value="garlic">الثوم</option><option value="cabbage">الملفوف</option><option value="cauliflower">القرنبيط (الزهرة)</option><option value="lettuce">الخس</option><option value="zucchini">الكوسا</option><option value="watermelon">البطيخ الأحمر</option><option value="melon">الشمام (البطيخ الأصفر)</option><option value="okra">البامية</option><option value="green-bean">الفاصولياء الخضراء</option></optgroup><optgroup label="الخضر المحمية"><option value="tomato">الطماطم (البندورة)</option><option value="cucumber">الخيار</option><option value="pepper">الفلفل</option><option value="eggplant">الباذنجان</option></optgroup><optgroup label="الأشجار المثمرة والكروم"><option value="olive">الزيتون</option><option value="pistachio">الفستق الحلبي</option><option value="grape">العنب</option><option value="apple">التفاح</option><option value="apricot">المشمش</option><option value="peach-nectarine">الدراق (الخوخ) والنكتارين</option><option value="cherry">الكرز</option><option value="plum">البرقوق</option><option value="pear">الإجاص (الكمثرى)</option><option value="quince">السفرجل</option><option value="fig">التين</option><option value="pomegranate">الرمان</option><option value="almond">اللوز</option><option value="walnut">الجوز</option><option value="citrus">الحمضيات (البرتقال والليمون واليوسفي وغيرها)</option></optgroup></select>
+</div>
+<div class="consultation-field">
+<label for="demoGovernorate">المحافظة</label>
+<select class="field-control" id="demoGovernorate">
+<option value="">اختر المحافظة</option><option>دمشق</option><option>ريف دمشق</option><option>حلب</option><option>حمص</option><option>حماة</option><option>اللاذقية</option><option>طرطوس</option><option>إدلب</option><option>الحسكة</option><option>دير الزور</option><option>الرقة</option><option>درعا</option><option>السويداء</option><option>القنيطرة</option>
+</select>
+</div>
+<div class="consultation-field">
+<label for="demoVariety">الصنف (اختياري)</label>
+<input class="field-control" id="demoVariety" placeholder="اسم الصنف إن كان معروفاً" type="text"/>
+</div>
+<div class="consultation-field">
+<label for="demoStage">مرحلة نمو المحصول</label>
+<select class="field-control" id="demoStage">
+<option value="">اختر المرحلة</option><option>إنبات أو بادرات</option><option>نمو خضري</option><option>تزهير</option><option>عقد أو تكوين ثمار</option><option>امتلاء أو نضج</option><option>بعد الحصاد</option><option>غير متأكد</option>
+</select>
+</div>
+<div class="consultation-field">
+<label for="demoIrrigation">مصدر أو طريقة الري</label>
+<select class="field-control" id="demoIrrigation">
+<option value="">اختر إن توفر</option><option>مطرية</option><option>سطحي</option><option>تنقيط</option><option>رش</option><option>مصدر آخر</option><option>غير معروف</option>
+</select>
+</div>
+<div class="consultation-field consultation-field-area">
+<label for="demoArea">المساحة التقريبية (اختياري)</label>
+<div class="consultation-inline-fields">
+<input class="field-control" id="demoArea" inputmode="decimal" min="0.1" placeholder="مثال: 5" step="0.1" type="number"/>
+<select aria-label="وحدة المساحة" class="field-control" id="demoAreaUnit"><option>دونم</option><option>هكتار</option></select>
+</div>
+</div>
+</div>
+</fieldset>
+<fieldset class="consultation-fieldset">
+<legend><span class="consultation-legend-icon consultation-legend-blue"><i aria-hidden="true" class="fa-solid fa-flask"></i></span> قراءات التربة والمياه (إن توفرت)</legend>
+<p class="consultation-field-hint">أدخل القيم كما وردت في تقرير المختبر، مع الوحدة وتاريخ العينة؛ لا تُقدّر الأرقام بالتخمين.</p>
+<div class="consultation-form-grid consultation-form-grid-advanced">
+<div class="consultation-field"><label for="demoSoilPh">pH التربة</label><div class="consultation-unit-field"><input class="field-control" id="demoSoilPh" inputmode="decimal" max="14" min="0" placeholder="من التقرير" step="0.1" type="number"/><span>pH</span></div></div>
+<div class="consultation-field"><label for="demoSoilEc">التوصيل الكهربائي للتربة</label><div class="consultation-unit-field"><input class="field-control" id="demoSoilEc" inputmode="decimal" min="0" placeholder="من التقرير" step="0.01" type="number"/><span>dS/m</span></div></div>
+<div class="consultation-field"><label for="demoWaterEc">التوصيل الكهربائي لماء الري</label><div class="consultation-unit-field"><input class="field-control" id="demoWaterEc" inputmode="decimal" min="0" placeholder="من التقرير" step="0.01" type="number"/><span>dS/m</span></div></div>
+<div class="consultation-field"><label for="demoMoisture">رطوبة منطقة الجذور (اختياري)</label><div class="consultation-unit-field"><input class="field-control" id="demoMoisture" inputmode="numeric" max="100" min="0" placeholder="قراءة القياس" step="1" type="number"/><span>%</span></div></div>
+<div class="consultation-field"><label for="demoSampleDate">تاريخ أخذ العينة أو القياس</label><input class="field-control" id="demoSampleDate" type="date"/></div>
+<div class="consultation-field"><label for="demoMeasureMethod">طريقة القياس أو مرجع المختبر</label><input class="field-control" id="demoMeasureMethod" placeholder="اختياري؛ اذكر الطريقة إن عُرفت" type="text"/></div>
+</div>
+</fieldset>
+<fieldset class="consultation-fieldset">
+<legend><span class="consultation-legend-icon consultation-legend-gold"><i aria-hidden="true" class="fa-solid fa-notes-medical"></i></span> وصف الحالة الزراعية</legend>
+<div class="consultation-form-grid">
+<div class="consultation-field consultation-field-full">
+<label for="demoIssue">ما الملاحظة أو السؤال الذي تريد مناقشته؟ <span aria-hidden="true">*</span></label>
+<textarea class="field-control consultation-textarea" id="demoIssue" maxlength="1200" placeholder="صف الأعراض، موضعها على النبات، وقت ظهورها، وتوزعها في الحقل. أضف ما تعرفه عن الري والطقس الأخير." required="" rows="5"></textarea>
+</div>
+<div class="consultation-field consultation-field-full">
+<label for="demoRecentInputs">معاملات أو إضافات حديثة (اختياري)</label>
+<textarea class="field-control consultation-textarea" id="demoRecentInputs" maxlength="800" placeholder="اسم المنتج كما على الملصق، وتاريخ وطريقة الاستخدام إن وجدت." rows="3"></textarea>
+</div>
+<div class="consultation-field consultation-field-full">
+<label for="demoAttachments">صور أو تقرير تحليل (اختياري)</label>
+<input accept="image/*,.pdf" class="field-control consultation-file-input" id="demoAttachments" multiple="" type="file"/>
+<small class="consultation-field-hint">اختيار الملف لا يرفعه؛ المرفقات محلية في المتصفح فقط ولا تُحفظ أو تُرسل.</small>
+</div>
+</div>
+</fieldset>
+<div class="consultation-actions">
+<button class="primary-button" id="demoPreviewButton" type="button"><i aria-hidden="true" class="fa-solid fa-eye"></i> عرض تنبيه النموذج التجريبي</button>
+<button class="secondary-button" type="reset"><i aria-hidden="true" class="fa-solid fa-rotate-left"></i> مسح المدخلات من الصفحة</button>
+</div>
+<p aria-live="polite" class="consultation-feedback" hidden="" id="demoFeedback" role="status" tabindex="-1"></p>
+</form>
+<p class="consultation-footer-note"><i aria-hidden="true" class="fa-solid fa-circle-info"></i> هذه واجهة شكلية لا تقدم تشخيصاً ولا تحفظ سجلاً للاستشارات. القرار الزراعي يتطلب سياق المحصول والمنطقة والمرحلة وتحليلاً مناسباً عند الحاجة.</p>
+</main>
+<script defer="" src="../../assets/js/consultation-demo.js"></script>
 </body>
 </html>

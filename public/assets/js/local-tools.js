@@ -44,7 +44,14 @@
 
   function updateRecommendation() {
     const crop = document.getElementById('recCrop')?.value || 'wheat';
-    const cfg = cropSettings[crop];
+    const record = (window.SyrAgriCrops || []).find(item => item.id === crop);
+    const cfg = cropSettings[crop] || {
+      title: record?.name || 'المحصول',
+      systemLabel: 'بيئة الزراعة ونظام الماء',
+      stageLabel: 'مرحلة النمو',
+      systems: [['rainfed', 'بعلي'], ['irrigated', 'مروي في أرض مكشوفة'], ['protected', 'بيت بلاستيكي في تربة'], ['unknown', 'غير معروف']],
+      stages: [['preplant', 'قبل الزراعة أو تأسيس البستان'], ['vegetative', 'نمو خضري'], ['flowering', 'تزهير وعقد'], ['bearing', 'إنتاج أو امتلاء'], ['after', 'بعد الحصاد'], ['unknown', 'غير معروف']]
+    };
     const system = document.getElementById('recSystem')?.value || '';
     const stage = document.getElementById('recStage')?.value || '';
     const governorate = document.getElementById('recGovernorate')?.value || '';
@@ -84,11 +91,16 @@
     } else if (crop === 'cotton') {
       messages.unshift(system === 'drip' ? 'القطن المروي بالتنقيط: أقرب دليل سوري معاصر وجدناه تجربة 2022–2023 في محطة تل حديا بحلب على صنف حلب 118 وتربة طينية عميقة؛ خفض العناصر إلى 75% من التوصية خفّض الغلة هناك، لكن ذلك لا يحدد الجرعة لحقل آخر.' : system === 'furrow' ? 'القطن بالري بالأخاديد: لا تنقل معدلات تجربة التنقيط مباشرة إلى الأخاديد. تختلف كفاءة الري والغسل ورطوبة الجذور؛ اعتمد تحليل الحقل والتوصية المحلية.' : 'القطن: اربط برنامج NPK بنظام الري والتربة والماء ومرحلة النبات، ولا تستخدم رقماً موحداً لكل الحقول.');
       if (stage === 'flowering' || stage === 'boll') messages.push('في التزهير والعقد وتكوين اللوز راقب انتظام الماء والحمل والنمو الخضري؛ لا تعالج التساقط أو ضعف العقد بإضافة عنصر دون تشخيص السبب.');
-    } else {
+    } else if (crop === 'pistachio') {
       const status = system === 'young' ? 'الأشجار الفتية' : system === 'bearing' ? 'الأشجار المثمرة' : 'هذا البستان';
       messages.unshift(`${status}: تختلف احتياجات الفستق مع العمر وحمل الثمار والمعاومة والري. التجربة السورية المنشورة في حماة تخص أشجار عاشوري بعمر 33 سنة؛ لا تنقل نتائجها أو كميات المادة العضوية إلى أشجار فتية أو بستان مختلف.`);
       if (stage === 'on' || stage === 'off') messages.push('دوّن حمل الموسم السابق والحالي؛ لا ترفع أو تخفض التغذية آلياً بسبب سنة الحمل وحدها.');
       messages.push('في البستان، افحص التربة وماء الري، واطلب تحليل الأوراق بتوقيت وطريقة يحددهما المختبر أو المرشد المحلي. حلّل السماد العضوي/الكمبوست قبل الإضافة لمعرفة العناصر والملوحة.');
+    } else if (record) {
+      messages.unshift(record.focus);
+      messages.push(Array.isArray(record.checks) ? record.checks.join(' ') : record.checks);
+      if (system === 'protected') messages.push('للبيت البلاستيكي في تربة: راجع قسم السماد الحيواني. النضج والسلامة والملوحة والفوسفور شروط مستقلة عن الحساب الغذائي؛ لا تستخدم منقوع الروث في التنقيط.');
+      messages.push('اختيارات النظام والمرحلة لتنظيم السياق فقط، ولا تثبت أن كل نظام أو مرحلة يناسب هذا المحصول. لا توجد جرعة تلقائية أو تعديل رقمي بحسب الاختيارات.');
     }
 
     document.getElementById('recResultTitle').textContent = `${cfg.title}${system ? ` — ${systemSelect.selectedOptions[0].textContent}` : ''}`;
@@ -98,7 +110,7 @@
   const diagnosticSteps = [
     {
       id: 'crop', title: 'ما المحصول الذي تظهر عليه الأعراض؟', hint: 'هذا الاختيار يساعد على توجيه الأسئلة فقط، ولا يحدد السبب وحده.', options: [
-        ['wheat', 'القمح'], ['cotton', 'القطن'], ['pistachio', 'الفستق الحلبي'], ['other', 'محصول آخر']
+        ['wheat', 'القمح'], ['cotton', 'القطن'], ['pistachio', 'الفستق الحلبي'], ['protected', 'خضروات بيت بلاستيكي'], ['vegetables', 'خضروات مكشوفة'], ['trees', 'أشجار مثمرة أخرى'], ['other', 'محصول آخر']
       ]
     },
     {
@@ -274,18 +286,6 @@
   }
 
   function initLocalTools() {
-    window.filterContent = function filterContentIncludingGuides() {
-      const input = (document.getElementById('searchInput')?.value || '').toLowerCase().trim();
-      const clearButton = document.getElementById('clearBtn');
-      if (clearButton) clearButton.classList.toggle('hidden', input.length === 0);
-      document.querySelectorAll('#advisoryCards .card-item').forEach((card) => {
-        card.style.display = !input || card.textContent.toLowerCase().includes(input) ? '' : 'none';
-      });
-      ['plantNutritionGuide', 'strategicCropRecommendations', 'diagnosisWizard'].forEach((id) => {
-        const section = document.getElementById(id);
-        if (section) section.style.display = !input || section.textContent.toLowerCase().includes(input) ? '' : 'none';
-      });
-    };
     const recCrop = document.getElementById('recCrop');
     if (recCrop) {
       ['recCrop', 'recSystem', 'recStage', 'recGovernorate', 'recAnalysis'].forEach((id) => document.getElementById(id)?.addEventListener('change', updateRecommendation));

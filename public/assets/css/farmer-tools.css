@@ -1,0 +1,90 @@
+/* Standalone farmer toolbox; load after site styles. No global selectors. */
+#farmerTools {
+  --ft-green: #163b27;
+  --ft-gold: #d4af37;
+  --ft-muted: #586a5e;
+  --ft-border: #dce6df;
+  box-sizing: border-box;
+  margin-block-end: 3rem;
+  padding: clamp(1rem, 3vw, 2rem);
+  border: 1px solid var(--ft-border);
+  border-radius: 1.5rem;
+  background: #fff;
+  color: var(--ft-green);
+  font-family: "Noto Kufi Arabic", system-ui, sans-serif;
+  line-height: 1.9;
+  scroll-margin-top: 7rem;
+  box-shadow: 0 10px 30px #163b270b;
+}
+#farmerTools *, #farmerTools *::before, #farmerTools *::after { box-sizing: border-box; }
+#farmerTools [hidden] { display: none !important; }
+#farmerTools .ft-header { display: flex; align-items: flex-start; gap: 1.5rem; justify-content: space-between; }
+#farmerTools .ft-header > div { flex: 1; min-width: 0; }
+#farmerTools .ft-kicker { display: inline-block; padding: .3rem .75rem; border-radius: 2rem; background: #eef5ef; color: #315b3e; font-size: .72rem; font-weight: 800; }
+#farmerTools h2 { margin: .7rem 0 .4rem; font-size: clamp(1.35rem, 2.7vw, 1.85rem); font-weight: 800; line-height: 1.7; }
+#farmerTools .ft-header p { margin: 0; font-size: .8rem; color: var(--ft-muted); }
+#farmerTools .ft-header .ft-privacy { flex: 0 1 16rem; border-inline-start: 3px solid var(--ft-gold); padding: .55rem .8rem; background: #fcf9ef; border-radius: .6rem; font-size: .7rem; color: #665626; }
+#farmerTools .ft-input-note { margin: 1.2rem 0; color: var(--ft-muted); font-size: .72rem; }
+#farmerTools .ft-accordions { display: flex; flex-direction: column; gap: .75rem; }
+#farmerTools .ft-tool { border: 1px solid var(--ft-border); border-radius: 1rem; background: #fafcf9; overflow: hidden; }
+#farmerTools .ft-tool[open] { background: #fff; border-color: #b9cebf; }
+#farmerTools .ft-tool > summary { display: flex; align-items: center; gap: .85rem; min-height: 5rem; padding: .85rem 1rem; list-style: none; cursor: pointer; }
+#farmerTools summary::-webkit-details-marker { display: none; }
+#farmerTools .ft-tool > summary::after { content: "+"; margin-inline-start: auto; padding-inline-start: .5rem; font-family: system-ui, sans-serif; font-size: 1.5rem; font-weight: 400; color: #54735f; }
+#farmerTools .ft-tool[open] > summary::after { content: "−"; }
+#farmerTools .ft-number { display: grid; flex: 0 0 2.7rem; height: 2.7rem; place-items: center; border: 1px solid #e8dcaa; border-radius: .75rem; background: #fcf7e7; color: #745c18; font-size: .82rem; font-weight: 800; }
+#farmerTools .ft-tool > summary strong { display: block; font-size: .91rem; font-weight: 800; }
+#farmerTools .ft-tool > summary small { display: block; color: var(--ft-muted); font-size: .67rem; font-weight: 400; }
+#farmerTools .ft-tool-body { padding: 0 1.2rem 1.2rem; }
+#farmerTools .ft-help { margin: .2rem 0 1rem; color: var(--ft-muted); font-size: .74rem; }
+#farmerTools .ft-help a { color: var(--ft-green); font-weight: 700; text-decoration: underline; text-underline-offset: 3px; }
+#farmerTools a:focus-visible { outline: 3px solid var(--ft-gold); outline-offset: 3px; }
+#farmerTools .ft-caution { margin: .5rem 0 1rem; border-inline-start: 3px solid var(--ft-gold); border-radius: .6rem; background: #fcf9ef; padding: .75rem .9rem; color: #665626; font-size: .73rem; }
+#farmerTools form { margin: 0; }
+#farmerTools .ft-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .85rem 1rem; }
+#farmerTools .ft-dependent { margin-block-start: .85rem; }
+#farmerTools .ft-field { display: flex; flex-direction: column; gap: .35rem; min-width: 0; }
+#farmerTools .ft-span-all { grid-column: 1 / -1; }
+#farmerTools label { color: #34513e; font-size: .74rem; font-weight: 700; }
+#farmerTools input, #farmerTools select, #farmerTools textarea { width: 100%; min-height: 2.9rem; padding: .6rem .75rem; border: 1px solid #c3d1c8; border-radius: .7rem; background: #fff; color: #183c29; font: inherit; font-size: .82rem; }
+#farmerTools input, #farmerTools textarea { direction: ltr; text-align: start; }
+#farmerTools textarea { min-height: 7rem; resize: vertical; line-height: 1.8; }
+#farmerTools input[aria-invalid="true"], #farmerTools textarea[aria-invalid="true"], #farmerTools select[aria-invalid="true"] { border-color: #9b3c2a; }
+#farmerTools small { color: var(--ft-muted); font-size: .66rem; }
+#farmerTools :is(input, select, textarea, button, summary):focus-visible { outline: 3px solid var(--ft-gold); outline-offset: 3px; }
+#farmerTools .ft-formula { margin: 1rem 0; padding: .6rem .8rem; border: 1px dashed var(--ft-border); border-radius: .65rem; background: #f6f9f5; color: #536557; font-size: .72rem; }
+#farmerTools .ft-actions { display: flex; align-items: center; flex-wrap: wrap; gap: .6rem; margin-block: 1rem; }
+#farmerTools .ft-button { display: inline-flex; justify-content: center; align-items: center; min-height: 2.75rem; padding: .6rem 1rem; border: 1px solid var(--ft-green); border-radius: .75rem; background: var(--ft-green); color: #fff; font: inherit; font-size: .73rem; font-weight: 800; cursor: pointer; }
+#farmerTools .ft-button:hover:not(:disabled) { background: #0e281a; }
+#farmerTools .ft-button-secondary { border-color: #b9cebf; background: #fff; color: var(--ft-green); }
+#farmerTools .ft-button-secondary:hover:not(:disabled) { background: #eef5ef; }
+#farmerTools .ft-button:disabled { opacity: .48; cursor: not-allowed; }
+#farmerTools .ft-result { margin: .5rem 0; padding: .9rem 1rem; border: 1px solid #dce6df; border-radius: .85rem; background: #f5f8f4; color: #244a32; font-size: .77rem; overflow-wrap: anywhere; }
+#farmerTools .ft-result p { margin: 0; }
+#farmerTools .ft-result .ft-result-title { margin-block-end: .6rem; font-weight: 800; color: var(--ft-green); }
+#farmerTools .ft-result dl { margin: 0; }
+#farmerTools .ft-result .ft-result-row { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; padding-block: .35rem; border-block-end: 1px solid #e1e9e2; }
+#farmerTools .ft-result dt { margin: 0; color: #4e6655; }
+#farmerTools .ft-result dd { margin: 0; font-weight: 800; }
+#farmerTools .ft-result .ft-result-note { margin-block-start: .7rem; color: #536557; font-size: .71rem; }
+#farmerTools .ft-result[data-ft-state="error"] { border-color: #d7b5aa; background: #fff8f5; color: #873423; }
+#farmerTools .ft-oxide { margin-block-start: 1.2rem; border: 1px dashed #c7d6cc; border-radius: .85rem; background: #fbfcf9; }
+#farmerTools .ft-oxide > summary { cursor: pointer; padding: .8rem 1rem; font-size: .75rem; font-weight: 700; list-style-position: inside; }
+#farmerTools .ft-oxide > summary::-webkit-details-marker { display: inline; }
+#farmerTools .ft-oxide-body { padding: 0 1rem 1rem; }
+@media (max-width: 700px) {
+  #farmerTools .ft-header { flex-direction: column; gap: .8rem; }
+  #farmerTools .ft-header .ft-privacy { flex: auto; width: 100%; }
+  #farmerTools .ft-grid { grid-template-columns: minmax(0, 1fr); }
+  #farmerTools .ft-tool-body { padding-inline: .85rem; }
+  #farmerTools .ft-tool > summary { padding-inline: .85rem; gap: .65rem; }
+  #farmerTools .ft-tool > summary strong { font-size: .83rem; }
+  #farmerTools .ft-actions .ft-button { flex: 1 1 100%; }
+  #farmerTools .ft-result .ft-result-row { flex-direction: column; gap: .1rem; }
+}
+@media print {
+  #farmerTools { box-shadow: none; }
+  #farmerTools .ft-actions { display: none; }
+  #farmerTools .ft-tool > .ft-tool-body, #farmerTools .ft-oxide > .ft-oxide-body { display: block; }
+  #farmerTools .ft-tool, #farmerTools .ft-result { break-inside: avoid; }
+}

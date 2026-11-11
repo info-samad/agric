@@ -1,0 +1,23 @@
+{
+  "reviewed": "2026-11-11",
+  "sources": [
+    {
+      "id": "calc-vt",
+      "title": "Virginia Tech — Conversion Factors Needed for Common Fertilizer Calculations",
+      "url": "https://www.pubs.ext.vt.edu/content/dam/pubs_ext_vt_edu/424/424-100/spes-299-I.pdf",
+      "supports": "P₂O₅→P ×0.4365؛ P→P₂O₅ ×2.2910؛ K₂O→K ×0.8301؛ K→K₂O ×1.2051. معاملات تقريبية مع ضرورة إظهار أساس العنصر."
+    },
+    {
+      "id": "calc-isu",
+      "title": "Iowa State University — How to Interpret Your Manure Analysis, PM3014, 2011",
+      "url": "https://www.agronext.iastate.edu/soilfertility/info/PM3014.pdf",
+      "supports": "تمييز التحليل الجاف عن التحليل كما ورد، وأخذ الرطوبة في الحساب. النيتروجين الكلي ليس كله متاحاً فوراً، والتوفر يتغير بالمادة والتخزين وطريقة الإضافة. تحليل N وP وK والرطوبة، وEC عند الحاجة؛ لا تنقل معاملات التوفر أو توصيات أيوا إلى سورية."
+    },
+    {
+      "id": "calc-ucanr",
+      "title": "University of California ANR — Calculation of drip application rate and distribution uniformity",
+      "url": "https://ucanr.edu/site/maintenance-microirrigation-systems/calculation-drip-application-rate-gph-hr",
+      "supports": "DU = متوسط تصريف أقل ربع من النقاط ÷ متوسط تصريف جميع النقاط × 100. الحساب لا يحدد وحده سبب ضعف الأداء أو برنامج الري."
+    }
+  ]
+}

@@ -1,0 +1,51 @@
+'use strict';
+const assert = require('node:assert/strict');
+const fs = require('node:fs');
+const vm = require('node:vm');
+const path = require('node:path');
+const math = require('../public/assets/js/farmer-tools.js');
+let count = 0;
+const equal = (actual, expected) => { assert.deepEqual(actual, expected); count++; };
+const close = (actual, expected) => { assert.ok(Math.abs(actual - expected) < 1e-9 * Math.max(1, Math.abs(expected))); count++; };
+const invalid = fn => { assert.throws(fn, RangeError); count++; };
+
+equal(math.convertArea({mode:'dimensions',length:'٥٠',width:'۲۰'}), {squareMetres:1000,dunums:1,hectares:0.1});
+equal(math.convertArea({mode:'area',area:2,unit:'ha'}), {squareMetres:20000,dunums:20,hectares:2});
+close(math.parseNonNegativeNumber('١٫٥'),1.5);
+for (const value of ['',null,undefined,'-1','Infinity',NaN,Infinity,'1abc','1,000']) invalid(() => math.parseNonNegativeNumber(value));
+invalid(() => math.convertArea({mode:'dimensions',length:-1,width:10}));
+const fert = {rate:100,rateUnit:'ha',area:2,areaUnit:'dunum',nutrient:'N',productBasis:'N',productPercent:46};
+close(math.fertilizerMass(fert).productKg,20/0.46);
+equal(math.fertilizerMass({...fert,rate:0}).productKg,0);
+for (const pct of ['',0,-2,101]) invalid(() => math.fertilizerMass({...fert,productPercent:pct}));
+invalid(() => math.fertilizerMass({...fert,nutrient:'P2O5',productBasis:'P'}));
+close(math.convertOxide({amount:100,from:'P2O5',to:'P'}).convertedAmount,43.65);
+close(math.convertOxide({amount:100,from:'K2O',to:'K'}).convertedAmount,83.01);
+invalid(() => math.convertOxide({amount:10,from:'N',to:'P'}));
+const manure = {wetMass:1000,analysisBasis:'dry',moisturePercent:60,nPercent:2,p2o5Percent:1,k2oPercent:1,nAvailabilityPercent:30,nGoalKg:10};
+const dry = math.manureNutrients(manure);
+close(dry.analysisMassKg,400); close(dry.totalNKg,8); close(dry.availableNKg,2.4); close(dry.remainingNGoalKg,7.6); close(dry.totalP2O5Kg,4);
+close(math.manureNutrients({...manure,analysisBasis:'wet'}).totalNKg,20);
+for (const key of ['moisturePercent','nPercent','p2o5Percent','k2oPercent','nAvailabilityPercent']) invalid(() => math.manureNutrients({...manure,[key]:''}));
+invalid(() => math.manureNutrients({...manure,moisturePercent:101}));
+close(math.dripUniformity('1,2,3,4').duPercent,40);
+close(math.dripUniformity('۱،۲،۳،۴').duPercent,40);
+close(math.dripUniformity([0,0,2,2]).duPercent,0);
+close(math.dripUniformity([2,2,2,2]).duPercent,100);
+equal(math.dripUniformity([1,2,3,4,5]).approximateQuarter,true);
+for (const readings of ['', '1,2,3', '0,0,0,0','1,2,-3,4','1,2,,4','1,2,3,Infinity']) invalid(() => math.dripUniformity(readings));
+
+// Minimal DOM harness validates existing conversion UI without browser/network.
+const elements = new Map();
+const element = (id, value='') => {
+  const el={id,value,textContent:'',className:'',checkValidity(){return Number.isFinite(Number(this.value));}};
+  elements.set(id,el);return el;
+};
+for (const id of ['dripArea','dripRate','areaUnit','dripMassUnit','dripRateLabel','dripFertType','dripResultVal','dripResultDesc','tankCapacity','sprayRate','sprayResultVal','waterVolume','flowRate','flushResultVal','flushDesc','compA','compB','compatResultBox','compatTitle','compatDesc']) element(id);
+const context = {window:{},document:{getElementById:id=>elements.get(id),querySelectorAll:()=>[],addEventListener:()=>{}},Intl,Number};
+vm.createContext(context);
+vm.runInContext(fs.readFileSync(path.join(__dirname,'../public/assets/js/core-tools.js'),'utf8'),context);
+elements.get('dripArea').value='-1'; elements.get('dripRate').value='2';
+context.window.calculateDrip(); assert.match(elements.get('dripResultVal').textContent,/قيماً موجبة/);count++;
+elements.get('waterVolume').value='100';elements.get('flowRate').value='0';context.window.calculateFlush();assert.match(elements.get('flushResultVal').textContent,/الموجبين/);count++;
+console.log(`PASS: ${count} calculation/domain/legacy-UI assertions. No crop dose inference or browser requests.`);

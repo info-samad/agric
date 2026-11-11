@@ -1,0 +1,117 @@
+<section id="farmerTools" class="content-panel ft-section" dir="rtl" lang="ar" aria-labelledby="farmerToolsHeading">
+  <header class="ft-header">
+    <div>
+      <span class="ft-kicker">صندوق حسابات المزارع</span>
+      <h2 id="farmerToolsHeading">حسابات من مدخلاتك، لا وصفات تسميد</h2>
+      <p>أدخل قياساتك وتحليلك ومعدلاً موصى به بصورة مستقلة. هذه أدوات حسابية لا تحدد احتياج المحصول ولا صلاحية المادة للاستخدام.</p>
+    </div>
+    <p class="ft-privacy">تُحسب النتائج داخل متصفحك، دون إرسال أو حفظ المدخلات. التنزيل اختياري على جهازك فقط.</p>
+  </header>
+  <p class="ft-input-note">تُقبل الأرقام العربية واللاتينية والفاصلة العشرية «٫» أو النقطة «.». لا تستخدم فواصل الآلاف. الصفر قيمة صريحة وليس حقلاً فارغاً.</p>
+
+  <div class="ft-accordions">
+    <details class="ft-tool" open>
+      <summary><span class="ft-number" aria-hidden="true">01</span><span><strong>المساحة وتحويل الوحدات</strong><small>من أبعاد مستطيل أو مساحة معلومة</small></span></summary>
+      <div class="ft-tool-body">
+        <p class="ft-help">الدونم هنا = 1000 م²، والهكتار = 10000 م². الطول × العرض صالح لمساحة مستطيلة فقط.</p>
+        <form data-ft-calculator="area" novalidate autocomplete="off">
+          <div class="ft-field">
+            <label for="ftAreaMode">طريقة إدخال المساحة</label>
+            <select id="ftAreaMode" name="mode" required data-ft-area-mode>
+              <option value="">اختر الطريقة</option>
+              <option value="dimensions">طول × عرض بالمتر</option>
+              <option value="area">مساحة مع وحدة معلومة</option>
+            </select>
+          </div>
+          <div class="ft-grid ft-dependent" data-ft-dimensions hidden>
+            <div class="ft-field"><label for="ftLength">الطول (م)</label><input id="ftLength" name="length" type="text" inputmode="decimal" required disabled></div>
+            <div class="ft-field"><label for="ftWidth">العرض (م)</label><input id="ftWidth" name="width" type="text" inputmode="decimal" required disabled></div>
+          </div>
+          <div class="ft-grid ft-dependent" data-ft-known-area hidden>
+            <div class="ft-field"><label for="ftKnownArea">المساحة المعلومة</label><input id="ftKnownArea" name="area" type="text" inputmode="decimal" required disabled></div>
+            <div class="ft-field"><label for="ftAreaUnit">وحدة المساحة المعلومة</label><select id="ftAreaUnit" name="unit" required disabled><option value="">اختر الوحدة</option><option value="m2">متر مربع (م²)</option><option value="dunum">دونم (1000 م²)</option><option value="ha">هكتار (10000 م²)</option></select></div>
+          </div>
+          <div class="ft-actions"><button type="submit" class="ft-button">احسب المساحة</button><button type="reset" class="ft-button ft-button-secondary">مسح</button><button type="button" class="ft-button ft-button-secondary" data-ft-download disabled>تنزيل النتيجة نصياً</button></div>
+          <div class="ft-result" data-ft-result role="status" aria-live="polite" aria-atomic="true"><p>اختر طريقة الإدخال وأكمل الحقول لعرض النتيجة.</p></div>
+        </form>
+      </div>
+    </details>
+
+    <details class="ft-tool">
+      <summary><span class="ft-number" aria-hidden="true">02</span><span><strong>كتلة منتج السماد</strong><small>تحويل معدل عنصر موصى به إلى كتلة منتج</small></span></summary>
+      <div class="ft-tool-body">
+        <p class="ft-caution">لا تُستنتج جرعة محصول هنا. استخدم معدلاً وصفه مختص لحالتك، وطابق أساس العنصر بين التوصية وملصق المنتج: <bdi>P</bdi> ليس <bdi>P₂O₅</bdi>، و<bdi>K</bdi> ليس <bdi>K₂O</bdi>.</p>
+        <form data-ft-calculator="fertilizer" novalidate autocomplete="off">
+          <div class="ft-grid">
+            <div class="ft-field"><label for="ftFertRate">معدل العنصر الموصى به (كغ)</label><input id="ftFertRate" name="rate" type="text" inputmode="decimal" required></div>
+            <div class="ft-field"><label for="ftFertRateUnit">المعدل لكل وحدة مساحة</label><select id="ftFertRateUnit" name="rateUnit" required><option value="">اختر الوحدة</option><option value="ha">لكل هكتار</option><option value="dunum">لكل دونم (1000 م²)</option></select></div>
+            <div class="ft-field"><label for="ftFertArea">مساحة التطبيق</label><input id="ftFertArea" name="area" type="text" inputmode="decimal" required></div>
+            <div class="ft-field"><label for="ftFertAreaUnit">وحدة مساحة التطبيق</label><select id="ftFertAreaUnit" name="areaUnit" required><option value="">اختر الوحدة</option><option value="m2">متر مربع (م²)</option><option value="dunum">دونم (1000 م²)</option><option value="ha">هكتار (10000 م²)</option></select></div>
+            <div class="ft-field"><label for="ftFertNutrient">أساس العنصر في المعدل الموصى به</label><select id="ftFertNutrient" name="nutrient" required><option value="">اختر أساس العنصر</option><option value="N">N — نيتروجين</option><option value="P2O5">P₂O₅ — مكافئ أكسيد الفوسفور</option><option value="K2O">K₂O — مكافئ أكسيد البوتاسيوم</option></select></div>
+            <div class="ft-field"><label for="ftFertBasis">أساس العنصر المكتوب على المنتج</label><select id="ftFertBasis" name="productBasis" required><option value="">اختر من الملصق</option><option value="N">N — نيتروجين</option><option value="P2O5">P₂O₅ — مكافئ أكسيد الفوسفور</option><option value="K2O">K₂O — مكافئ أكسيد البوتاسيوم</option><option value="P">P — فوسفور عنصري (يتطلب تحويل الأساس)</option><option value="K">K — بوتاسيوم عنصري (يتطلب تحويل الأساس)</option></select></div>
+            <div class="ft-field ft-span-all"><label for="ftFertPercent">نسبة العنصر المختار في المنتج (% كتلية، من 0 إلى 100)</label><input id="ftFertPercent" name="productPercent" type="text" inputmode="decimal" required aria-describedby="ftFertPercentHint"><small id="ftFertPercentHint">أدخل النسبة المضمونة لهذا العنصر فقط. نسبة 0% لا تسمح بحساب كتلة منتج لتزويده.</small></div>
+          </div>
+          <p class="ft-formula">كتلة المنتج = معدل العنصر × المساحة بوحدة المعدل ÷ (نسبة العنصر ÷ 100).</p>
+          <div class="ft-actions"><button type="submit" class="ft-button">احسب كتلة المنتج</button><button type="reset" class="ft-button ft-button-secondary">مسح</button><button type="button" class="ft-button ft-button-secondary" data-ft-download disabled>تنزيل النتيجة نصياً</button></div>
+          <div class="ft-result" data-ft-result role="status" aria-live="polite" aria-atomic="true"><p>أكمل المدخلات وطابق أساس العنصر لعرض النتيجة.</p></div>
+        </form>
+        <details class="ft-oxide">
+          <summary>تحويل اختياري بين العنصر ومكافئ الأكسيد</summary>
+          <div class="ft-oxide-body">
+            <p class="ft-help">لتحويل كمية أو نسبة على الأساس نفسه، لا لتفسير جرعة محصول. عوامل تقريبية موثقة: <bdi>P = P₂O₅ × 0.4365</bdi>، <bdi>P₂O₅ = P × 2.2910</bdi>، <bdi>K = K₂O × 0.8301</bdi>، <bdi>K₂O = K × 1.2051</bdi>. استخدم النتيجة يدوياً بعد التأكد من وحدة وأساس التوصية. <a href="https://www.pubs.ext.vt.edu/content/dam/pubs_ext_vt_edu/424/424-100/spes-299-I.pdf" target="_blank" rel="noopener noreferrer">مرجع Virginia Tech (PDF)</a>.</p>
+            <form data-ft-calculator="oxide" novalidate autocomplete="off">
+              <div class="ft-grid">
+                <div class="ft-field"><label for="ftOxideAmount">القيمة المراد تحويلها (بنفس الوحدة)</label><input id="ftOxideAmount" name="amount" type="text" inputmode="decimal" required></div>
+                <div class="ft-field"><label for="ftOxideDirection">اتجاه تحويل الأساس</label><select id="ftOxideDirection" name="direction" required><option value="">اختر الاتجاه</option><option value="P2O5:P">P₂O₅ ← إلى P</option><option value="P:P2O5">P ← إلى P₂O₅</option><option value="K2O:K">K₂O ← إلى K</option><option value="K:K2O">K ← إلى K₂O</option></select></div>
+              </div>
+              <div class="ft-actions"><button type="submit" class="ft-button">حوّل الأساس</button><button type="reset" class="ft-button ft-button-secondary">مسح</button><button type="button" class="ft-button ft-button-secondary" data-ft-download disabled>تنزيل النتيجة نصياً</button></div>
+              <div class="ft-result" data-ft-result role="status" aria-live="polite" aria-atomic="true"><p>أدخل القيمة وحدد اتجاه التحويل.</p></div>
+            </form>
+          </div>
+        </details>
+      </div>
+    </details>
+
+    <details class="ft-tool">
+      <summary><span class="ft-number" aria-hidden="true">03</span><span><strong>محاسبة عناصر السماد العضوي</strong><small>ما تحمله كتلة معلومة، وليس تحديد جرعة</small></span></summary>
+      <div class="ft-tool-body">
+        <p class="ft-help">استخدم تحليلاً ممثلاً للمادة. تُحسب العناصر الكلية على أساس التحليل؛ تقدير N المتاح في الموسم الأول يعتمد فقط على نسبة الإتاحة التي تدخلها أنت.</p>
+        <form data-ft-calculator="manure" novalidate autocomplete="off">
+          <div class="ft-grid">
+            <div class="ft-field"><label for="ftManureMass">الكتلة الرطبة المضافة أو المعلومة (كغ)</label><input id="ftManureMass" name="wetMass" type="text" inputmode="decimal" required></div>
+            <div class="ft-field"><label for="ftManureBasis">أساس نسب التحليل</label><select id="ftManureBasis" name="analysisBasis" required data-ft-manure-basis><option value="">اختر من تقرير التحليل</option><option value="wet">على أساس المادة الرطبة</option><option value="dry">على أساس المادة الجافة</option></select></div>
+            <div class="ft-field ft-span-all" data-ft-moisture-field hidden><label for="ftManureMoisture">رطوبة المادة (%، مطلوبة للأساس الجاف فقط)</label><input id="ftManureMoisture" name="moisturePercent" type="text" inputmode="decimal" required disabled aria-describedby="ftMoistureHint"><small id="ftMoistureHint">كتلة المادة الجافة = الكتلة الرطبة × (1 − الرطوبة ÷ 100).</small></div>
+            <div class="ft-field"><label for="ftManureN">N الكلي في التحليل (%)</label><input id="ftManureN" name="nPercent" type="text" inputmode="decimal" required aria-describedby="ftManureZeros"></div>
+            <div class="ft-field"><label for="ftManureP">P₂O₅ الكلي في التحليل (%)</label><input id="ftManureP" name="p2o5Percent" type="text" inputmode="decimal" required aria-describedby="ftManureZeros"></div>
+            <div class="ft-field"><label for="ftManureK">K₂O الكلي في التحليل (%)</label><input id="ftManureK" name="k2oPercent" type="text" inputmode="decimal" required aria-describedby="ftManureZeros"></div>
+            <div class="ft-field"><label for="ftManureAvailability">إتاحة N للموسم الأول (%)</label><input id="ftManureAvailability" name="nAvailabilityPercent" type="text" inputmode="decimal" required aria-describedby="ftAvailabilityHint"><small id="ftAvailabilityHint">من مصدر ملائم للمادة والظروف. لا توجد نسبة افتراضية؛ أدخل 0 أو قيمة حتى 100.</small></div>
+            <div class="ft-field ft-span-all"><label for="ftManureGoal">هدف N الكلي للموسم الموصى به بصورة مستقلة (كغ، اختياري)</label><input id="ftManureGoal" name="nGoalKg" type="text" inputmode="decimal" aria-describedby="ftManureGoalHint"><small id="ftManureGoalHint">يُطرح منه N المتوقع إتاحته من هذه الكتلة فقط. لا تُحتسب مصادر N الأخرى، ولا تُحسب جرعة سماد عضوي أو معدني.</small></div>
+          </div>
+          <p id="ftManureZeros" class="ft-help">كل نسبة تحليل مطلوبة: أدخل صفراً صريحاً عند انعدام العنصر، لا تترك الحقل فارغاً. جميع النسب من 0 إلى 100. لا تُفترض إتاحة للفوسفور أو البوتاسيوم.</p>
+          <div class="ft-actions"><button type="submit" class="ft-button">احسب العناصر المحمولة</button><button type="reset" class="ft-button ft-button-secondary">مسح</button><button type="button" class="ft-button ft-button-secondary" data-ft-download disabled>تنزيل النتيجة نصياً</button></div>
+          <div class="ft-result" data-ft-result role="status" aria-live="polite" aria-atomic="true"><p>أكمل الكتلة وأساس التحليل وجميع نسب العناصر وإتاحة N.</p></div>
+        </form>
+        <p class="ft-caution">النضج، والملوحة (EC)، ومسببات الأمراض، وحدود تراكم الفوسفور تُقيَّم بصورة مستقلة؛ أي منها قد يمنع الاستخدام حتى إن كانت محاسبة N مناسبة. هذه الأداة لا توصي بجرعة ولا تثبت سلامة المادة.</p>
+        <p class="ft-help">مرجع تفسير أساس التحليل وتصحيح الرطوبة: <a href="https://www.agronext.iastate.edu/soilfertility/info/PM3014.pdf" target="_blank" rel="noopener noreferrer">Iowa State — PM3014 (PDF)</a>. لا يُستخدم المرجع لإدخال نسبة إتاحة افتراضية.</p>
+      </div>
+    </details>
+
+    <details class="ft-tool">
+      <summary><span class="ft-number" aria-hidden="true">04</span><span><strong>انتظام تصريف نقاط التنقيط</strong><small>حساب انتظام التوزيع للربع الأدنى (DU)</small></span></summary>
+      <div class="ft-tool-body">
+        <p class="ft-help">خذ قراءات من نقاط ممثلة لبداية الشبكة ووسطها ونهايتها وتفاوت المناسيب، بوحدة وزمن قياس موحدين؛ لا تجعل أربع قراءات متجاورة حكماً على شبكة كاملة. مرجع الصيغة: <a href="https://ucanr.edu/site/maintenance-microirrigation-systems/calculation-drip-application-rate-gph-hr" target="_blank" rel="noopener noreferrer">جامعة كاليفورنيا — انتظام تصريف نقاط التنقيط</a>. تقريب الربع لعدد غير مضاعف لأربعة خيار حسابي معلن في هذه الأداة، وليس بروتوكول أخذ عينات موصى به.</p>
+        <form data-ft-calculator="drip" novalidate autocomplete="off">
+          <div class="ft-field">
+            <label for="ftDripReadings">التصريفات المقاسة للنقاط، بوحدة واحدة</label>
+            <textarea id="ftDripReadings" name="readings" rows="4" required inputmode="decimal" aria-describedby="ftDripHint"></textarea>
+            <small id="ftDripHint">أدخل 4 قراءات على الأقل، مفصولة بفاصلة «,» أو «،» أو سطر جديد أو مسافة. تُقبل القيم الصفرية، ويجب أن يكون المتوسط أكبر من صفر. استخدم «٫» أو «.» للعشرية، لا الفاصلة المستخدمة بين القراءات.</small>
+          </div>
+          <p class="ft-formula">DU = متوسط أقل ربع من القراءات ÷ متوسط جميع القراءات × 100. عدد قراءات الربع الأدنى = تقريب عدد القراءات ÷ 4 إلى الأعلى؛ إذا لم يكن العدد مضاعفاً لـ4 فهذه مقاربة وليست ربعاً دقيقاً.</p>
+          <div class="ft-actions"><button type="submit" class="ft-button">احسب DU</button><button type="reset" class="ft-button ft-button-secondary">مسح</button><button type="button" class="ft-button ft-button-secondary" data-ft-download disabled>تنزيل النتيجة نصياً</button></div>
+          <div class="ft-result" data-ft-result role="status" aria-live="polite" aria-atomic="true"><p>أدخل القراءات المقاسة لعرض المتوسط وDU، دون حكم زراعي أو تصنيف لوني.</p></div>
+        </form>
+      </div>
+    </details>
+  </div>
+  <noscript><p class="ft-caution">تحتاج الحاسبات إلى JavaScript. تبقى الصيغ والتنبيهات أعلاه متاحة للقراءة دون تشغيله.</p></noscript>
+</section>

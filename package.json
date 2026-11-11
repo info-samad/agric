@@ -1,22 +1,17 @@
 {
   "name": "syragri",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "version": "2.0.0",
+  "description": "منصة زراعية عربية ثابتة للمزارع السوري بمحتوى موثق وحاسبات تحويلية",
+  "private": true,
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "python3 -m http.server 3000 --bind 0.0.0.0 --directory public",
+    "build": "python3 scripts/build_site.py",
+    "test": "python3 scripts/check_site.py && node scripts/test_calculators.cjs && node scripts/test_schedule_tabs.cjs",
     "build-css": "tailwindcss -i ./src/tailwind.input -o ./public/assets/css/site.css --minify"
   },
-  "repository": {
-    "type": "git",
-    "url": "https://7f0548f6b28a1758d9bf7be630d36cb4.artifacts.cloudflare.net/git/prod/wdp_985574d16f87b39c3d8fd778.git"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
   "devDependencies": {
-    "@fortawesome/fontawesome-free": "^6.4.0",
-    "tailwindcss": "^3.4.17"
+    "@fortawesome/fontawesome-free": "6.4.0",
+    "tailwindcss": "3.4.17"
   },
-  "private": true
+  "packageManager": "npm@10.9.9"
 }

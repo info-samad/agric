@@ -1,71 +1,153 @@
+"""Build the current static site; Python standard library only, no network."""
 from pathlib import Path
+from html import escape
+from urllib.parse import urlsplit
+import json
+import re
 
 ROOT = Path(__file__).resolve().parents[1]
-PUBLIC = ROOT / "public"
-SOURCE = ROOT / "src" / "source-original.html"
-REC = ROOT / "src" / "recommendations-section.html"
-DIAG = ROOT / "src" / "diagnosis-section.html"
+PUBLIC = ROOT / 'public'
 
-html = SOURCE.read_text(encoding="utf-8")
-html = "\n".join(line.rstrip() for line in html.splitlines()) + "\n"
-start = html.index("    <!-- Tailwind CSS CDN -->")
-style_start = html.index("    <style>", start)
-local_head_assets = """    <meta name="theme-color" content="#163b27">
-    <meta property="og:title" content="المنصة الاستشارية الزراعية السورية">
-    <meta property="og:description" content="دليل تغذية النبات، إرشادات مشروطة للمحاصيل السورية، ومسار تشخيص أولي يعمل محلياً.">
-    <link rel="stylesheet" href="./assets/fontawesome/css/all.min.css">
-    <link rel="stylesheet" href="./assets/css/site.css">
-    <link rel="stylesheet" href="./assets/css/site-overrides.css">
-"""
-html = html[:start] + local_head_assets + html[style_start:]
-html = html.replace("font-family: 'Tajawal', sans-serif;", "font-family: 'Noto Kufi Arabic', system-ui, sans-serif;")
-html = html.replace('src="شعار.png"', 'src="./assets/images/شعار.png"')
-html = html.replace('<main class="max-w-7xl', '<main id="main-content" class="max-w-7xl', 1)
-html = html.replace('class="flex items-center justify-between h-24"', 'class="site-header-row flex items-center justify-between h-24"', 1)
-html = html.replace('<!-- Brand Title & Brand Logo -->\n                <div class="flex items-center gap-4">', '<!-- Brand Title & Brand Logo -->\n                <div class="site-brand flex items-center gap-4">', 1)
-html = html.replace('''src="./assets/images/شعار.png" class="w-full h-full object-contain" alt="شعار المنصة الزراعية">
-                    </div>
-                    <div>
-                        <div class="flex items-center gap-2">''', '''src="./assets/images/شعار.png" class="w-full h-full object-contain" alt="شعار المنصة الزراعية">
-                    </div>
-                    <div class="site-brand-copy min-w-0">
-                        <div class="flex items-center gap-2">''', 1)
-html = html.replace('<div class="flex items-center gap-3 no-print">', '<div class="site-header-actions flex items-center gap-3 no-print">', 1)
-mobile_nav = '''
-    <nav class="site-mobile-nav xl:hidden" aria-label="تنقل سريع">
-        <a class="site-mobile-nav-link" href="#plantNutritionGuide"><i class="fa-solid fa-book-open" aria-hidden="true"></i><span>دليل التغذية</span></a>
-        <a class="site-mobile-nav-link" href="#strategicCropRecommendations"><i class="fa-solid fa-seedling" aria-hidden="true"></i><span>المحاصيل</span></a>
-        <a class="site-mobile-nav-link" href="#diagnosisWizard"><i class="fa-solid fa-stethoscope" aria-hidden="true"></i><span>التشخيص</span></a>
-    </nav>
-'''
-html = html.replace('</header>', '</header>\n' + mobile_nav, 1)
-html = html.replace('id="searchInput" onkeyup="filterContent()"', 'id="searchInput" aria-label="البحث في الموسوعة الزراعية" onkeyup="filterContent()"', 1)
-html = html.replace('<button onclick="clearSearch()" id="clearBtn"', '<button onclick="clearSearch()" id="clearBtn" aria-label="مسح البحث" title="مسح البحث"', 1)
+def load(name):
+    return json.loads((ROOT / name).read_text(encoding='utf-8'))
 
-body_start = html.index(">", html.index("<body")) + 1
-html = html[:body_start] + '\n    <a class="skip-link" href="#main-content">انتقل إلى المحتوى</a>\n' + html[body_start:]
-nav_anchor = '<a href="#plantNutritionGuide" class="hidden lg:inline-flex text-xs font-bold text-white hover:text-gold-400 px-2 py-2">دليل تغذية النبات</a>'
-if nav_anchor not in html:
-    raise RuntimeError("لم يُعثر على رابط دليل التغذية في شريط الرأس")
-nav_links = nav_anchor + '''
-                    <a href="#strategicCropRecommendations" class="hidden xl:inline-flex text-xs font-bold text-white hover:text-gold-400 px-2 py-2">توصيات المحاصيل</a>
-                    <a href="#diagnosisWizard" class="hidden xl:inline-flex text-xs font-bold text-white hover:text-gold-400 px-2 py-2">تشخيص تفاعلي</a>'''
-html = html.replace(nav_anchor, nav_links, 1)
-section_anchor = "        <!-- SECTION 2: THE AGRONOMY CALCULATOR SYSTEM -->"
-if section_anchor not in html:
-    raise RuntimeError("لم يُعثر على موضع الحاسبات لإدراج الأقسام")
-new_sections = REC.read_text(encoding="utf-8") + "\n" + DIAG.read_text(encoding="utf-8") + "\n"
-html = html.replace(section_anchor, new_sections + section_anchor, 1)
-last_script_end = html.rfind("</script>")
-if last_script_end < 0:
-    raise RuntimeError("لم يُعثر على مقطع JavaScript الأصلي")
-script_end = last_script_end + len("</script>")
-html = html[:script_end] + '\n    <script defer src="./assets/js/local-tools.js"></script>' + html[script_end:]
-inline_style_end = html.find("</style>")
-if inline_style_end < 0:
-    raise RuntimeError("لم يُعثر على CSS المضمن")
-skip_css = "\n        .skip-link{position:fixed;top:-5rem;right:1rem;z-index:100;background:#fff;color:#163b27;padding:.7rem 1rem;border:2px solid #d4af37;border-radius:.75rem;font-weight:800}.skip-link:focus{top:1rem}\n"
-html = html[:inline_style_end] + skip_css + html[inline_style_end:]
-html = "\n".join(line.rstrip() for line in html.splitlines()) + "\n"
-(PUBLIC / "index.html").write_text(html, encoding="utf-8")
-print(f"Built {PUBLIC / 'index.html'} ({len(html)} chars)")
+def e(text):
+    return escape(str(text), quote=True)
+
+config = load('site.config.json')
+organic = load('research/organic.json')
+catalogue = load('research/crops.json')
+audit = load('research/audit.json')
+calculations = load('research/calculation-sources.json')
+schedules = load('research/greenhouse-schedules.json')
+crops = catalogue['crops']
+reviewed = config['reviewed']
+source_map = {}
+for group in [organic, catalogue, audit, calculations, schedules]:
+    for source in group.get('sources', []):
+        source_map[source['id']] = source
+# Existing source-linked Syrian contexts are preserved, not promoted to current recommendations.
+legacy = [
+    {'id':'legacy-fao','title':'FAO — Fertilizer use by crop in the Syrian Arab Republic, 2003','url':'https://www.fao.org/4/Y4732E/y4732e08.htm','supports':'سياق تاريخي لا توصية وطنية حالية.'},
+    {'id':'legacy-icarda','title':'ICARDA — Impact of Modern Agricultural Technologies on Durum Wheat Production in Syria, 2003','url':'https://mel.cgiar.org/reporting/download/hash/YhMj6HXU','supports':'تقرير تاريخي؛ لا يُحوّل تصنيف مناطقه إلى محافظات اليوم.'},
+    {'id':'legacy-cotton','title':'المجلة السورية للبحوث الزراعية — تجربة القطن حلب 118 في تل حديا، 2022–2023','url':'https://agri-research-journal.net/SjarEn/?p=10947','supports':'تجربة محلية محددة الصنف والتربة والري؛ لا تعمم جرعاتها.'},
+    {'id':'legacy-pistachio','title':'المجلة السورية للبحوث الزراعية — كمبوست مخلفات الفستق، تجربة في حماة 2019–2020','url':'https://agri-research-journal.net/SjarEn/?p=8934','supports':'تجربة على أشجار عاشوري معمرة، لا وصفة موحدة للبساتين.'}
+]
+for source in legacy:
+    source_map[source['id']] = source
+
+# The website cannot build with unsourced crop/organic claims.
+for record in crops + organic['paragraphs']:
+    for id in record.get('sourceIds', []):
+        if id not in source_map:
+            raise ValueError('Unknown source: ' + id)
+
+def links(ids):
+    return '<div class="source-links">' + ''.join(f'<a href="#source-{e(id)}">{e(source_map[id]["title"])}</a>' for id in ids if id in source_map) + '</div>'
+
+def section_start(id, kicker, title, intro):
+    return f'<section id="{id}" class="agri-section" aria-labelledby="{id}Title"><span class="agri-kicker">{e(kicker)}</span><h2 id="{id}Title">{e(title)}</h2><p>{e(intro)}</p><span class="agri-review">مراجعة المصادر: {e(reviewed)}</span>'
+
+organic_html = section_start('organicManure','أولوية للمزارع · تربة البيوت البلاستيكية',organic['title'],'زيادة المادة العضوية ليست مبرراً لزيادة الروث كل موسم. افصل جودة المادة وسلامتها عن حساب عناصرها، واربط الإضافة بتحليل التربة والماء والكمبوست.')
+organic_html += '<div class="agri-notice"><strong>قبل أي إضافة داخل البيت:</strong> لا تستخدم الروث الطازج أو غير موثق المعالجة أثناء إنتاج الخضار؛ لا تُحقن منقوعاته في التنقيط. صلاحية المادة تتطلب تقييم النضج والسلامة والملوحة والفوسفور، لا اسم الحيوان أو مدة التخزين فقط.</div>'
+steps = [
+    ('01','حلّل أولاً','عينة تربة وماء ري ومادة عضوية ممثلة؛ سجّل EC وطريقة القياس والرطوبة وأساس العناصر.'),
+    ('02','قيّم المادة','مصدر معلوم ومعالجة موثقة وإنضاج؛ افصل الروث الخام وأدواته عن المادة المنجزة والمحصول.'),
+    ('03','وازن قبل الزراعة','كمية يحددها التحليل والتوصية، مع توزيع منتظم واحتساب العناصر وتجنب زيادة الأملاح والفوسفور.')
+]
+organic_html += '<div class="organic-workflow">' + ''.join(f'<article class="organic-step"><span class="organic-step-number">{n}</span><h3>{e(t)}</h3><p>{e(p)}</p></article>' for n,t,p in steps) + '</div>'
+for index, record in enumerate(organic['paragraphs']):
+    organic_html += f'<details class="agri-details" {"open" if index == 0 else ""}><summary>{e(record["heading"])}</summary><p>{e(record["text"])}</p>{links(record["sourceIds"])}</details>'
+organic_html += '<p class="crop-directory-help">تُطبّق هذه المبادئ على زراعة التربة، لا الزراعة المائية. لا تُستخدم أرقام المعايير الأجنبية بوصفها تشريعاً سورياً أو جرعات سورية.</p><a class="secondary-button" href="#farmerTools">احسب مساهمة سمادك من التحليل</a></section>'
+
+def schedule_table(schedule):
+    head = ''.join(f'<th>{e(col)}</th>' for col in schedule['columns'])
+    rows = ''.join('<tr>' + ''.join(f'<td>{e(cell)}</td>' for cell in row) + '</tr>' for row in schedule['rows'])
+    return f'<div class="schedule-table-wrap"><table class="schedule-table"><thead><tr>{head}</tr></thead><tbody>{rows}</tbody></table></div>'
+
+schedule_html = section_start('greenhouseSchedules', 'جداول مرجعية · طماطم وخيار', schedules['title'], schedules['intro'])
+schedule_html += '<div class="agri-notice"><strong>قبل استخدام أي رقم:</strong> حدّد هل البيت مزروع في التربة أم في وسط دون تربة، وسجّل تحليل ماء الري والتربة أو الوسط، EC وpH وطريقة القياس، حجم الري والصرف، والصنف والمرحلة. ppm تركيز في المحلول وليس كغ من منتج تجاري.</div>'
+schedule_html += '<div class="schedule-tabs" role="tablist" aria-label="اختيار جدول المحصول"><button type="button" class="schedule-tab active" role="tab" aria-selected="true" data-schedule-target="tomato">جدول الطماطم</button><button type="button" class="schedule-tab" role="tab" aria-selected="false" data-schedule-target="cucumber">جدول الخيار</button></div><p class="crop-directory-help">اختر المحصول لعرض جدوله. داخل كل جدول مرّر أفقياً على الهاتف لقراءة الأعمدة، ثم استخدم مؤشر التعديل قبل تغيير البرنامج.</p>'
+for key in ['tomato', 'cucumber']:
+    item = schedules[key]
+    hidden = '' if key == 'tomato' else ' hidden'
+    schedule_html += f'<article class="schedule-card" data-schedule-card="{key}"{hidden}><h3>{e(item["title"])}</h3>{schedule_table(item)}<div class="schedule-notes"><h4>طريقة الاستخدام والتعديل</h4><ul>' + ''.join(f'<li>{e(note)}</li>' for note in item['operational']) + f'</ul>{links(item["sourceIds"])}</div></article>'
+schedule_html += '<p class="crop-directory-help">الجداول لا تستبدل برنامجاً محلياً. لا ترفع السماد بسبب اصفرار منفرد، ولا تخلط نترات الكالسيوم مع الفوسفات أو الكبريتات في خزان مركز. سجّل المدخلات والـEC والصرف ونتائج التحليل قبل كل تعديل.</p></section>'
+
+categories = list(dict.fromkeys(c['category'] for c in crops))
+directory = section_start('cropDirectory','دليل للمحاصيل والأشجار المزروعة في سورية','اختر محصولك، ثم راجع سياقه','محاصيل حقلية وخضروات وأشجار موثقة الزراعة في سورية. اضغط اسم المحصول لقراءة أولويات المتابعة؛ هذا دليل نوعي لا ترتيب إنتاج حالي ولا برنامج جرعات.')
+directory += '<details class="agri-details"><summary>نطاق الدليل وكيف تُستخدم مصادره</summary><p>' + e(catalogue['scopeNote']) + '</p></details>'
+directory += '<div class="crop-controls no-print"><div><label for="cropSearch">ابحث في الدليل</label><input id="cropSearch" type="search" class="field-control" placeholder="مثال: بندورة، عدس، زيتون"></div><div><label for="cropCategory">المجموعة</label><select id="cropCategory" class="field-control"><option value="">جميع المجموعات</option>' + ''.join(f'<option value="{e(x)}">{e(x)}</option>' for x in categories) + '</select></div><button class="secondary-button" type="button" id="cropReset">مسح التصفية</button></div><p id="cropResultCount" class="crop-result-count" aria-live="polite"></p><p id="cropEmpty" class="crop-empty" hidden>لا توجد محاصيل مطابقة. جرّب اسماً آخر أو ألغِ اختيار المجموعة.</p><div class="crop-catalogue">'
+for crop in crops:
+    systems = crop.get('systems', [])
+    if isinstance(systems, list): systems = ' · '.join(str(x) for x in systems)
+    checks = crop.get('checks', '')
+    if isinstance(checks, list): checks = ' '.join(str(x) for x in checks)
+    directory += f'<details class="crop-card" id="crop-{e(crop["id"])}" data-category="{e(crop["category"])}"><summary><span>{e(crop["name"])}<span class="crop-category">{e(crop["category"])}</span></span></summary><p><strong>السياق:</strong> {e(systems)}</p><p><strong>تركيز المتابعة:</strong> {e(crop["focus"])}</p><p><strong>قبل التسميد:</strong> {e(checks)}</p>{links(crop["sourceIds"])}<a href="#strategicCropRecommendations" class="agri-inline-source" data-crop-choice="{e(crop["id"])}">اختيار هذا المحصول في نموذج السياق</a></details>'
+directory += '</div><p class="crop-directory-help">الأسماء تشمل تسميات محلية عند توفرها. مصادر الزراعة تثبت وجود المحصول؛ إرشادات التغذية النوعية مبادئ عامة وليست نتائج تجربة خاصة بكل صنف أو محافظة. زراعة محصول في سورية لا تعني أنه منتشر بالدرجة نفسها في كل منطقة.</p></section>'
+
+options = ''.join(f'<optgroup label="{e(cat)}">' + ''.join(f'<option value="{e(c["id"])}">{e(c["name"])}</option>' for c in crops if c['category']==cat) + '</optgroup>' for cat in categories)
+
+sources_html = section_start('sources','مراجع ظاهرة · معلومات قابلة للمراجعة','المصادر وحدود تطبيقها','المراجع السورية التاريخية والتجارب المحلية تعطي سياقاً محدداً. المراجع الجامعية الدولية تدعم مبادئ الإدارة والسلامة، ولا تُنقل معدلاتها إلى الحقول السورية تلقائياً.')
+sources_html += '<div class="reference-list">'
+for id, source in source_map.items():
+    sources_html += f'<article class="reference-item" id="source-{e(id)}"><h3>{e(source["title"])}</h3><p>{e(source.get("supports", "مرجع داعم للفقرات المرتبطة به. راجع شروط الدراسة والمنطقة وطريقة القياس."))}</p><a href="{e(source["url"])}" target="_blank" rel="noopener noreferrer">قراءة المصدر الأصلي</a><p>تاريخ مراجعة الرابط والمحتوى: {e(reviewed)}</p></article>'
+sources_html += '</div></section>'
+
+# Safe brand asset handling: accept files inside public only; do not synthesize a QR.
+def asset(path):
+    file = (PUBLIC / path).resolve()
+    if not file.is_relative_to(PUBLIC.resolve()) or not file.is_file():
+        raise ValueError('Invalid brand asset: ' + path)
+    return e(path)
+
+asset(config['logo'])
+barcode = ''
+header_barcode = ''
+if config.get('barcode'):
+    image = asset(config['barcode'])
+    label = e(config.get('barcodeLabel','رمز المنصة'))
+    url = config.get('barcodeLink', '')
+    if url and urlsplit(url).scheme != 'https': raise ValueError('Barcode link must be HTTPS')
+    header_barcode = f'<a class="header-barcode" href="#platformBarcode" aria-label="عرض رمز QR المرفق بحجمه الواضح"><img src="./{image}" alt="رمز QR المرفق" width="48" height="48"></a>'
+    barcode = section_start('platformBarcode','هوية المنصة',label,'الصورة الأصلية التي زوّد بها صاحب الموقع، دون تغيير محتواها أو توليد بديل.')
+    barcode += f'<div class="barcode-wrap"><img class="barcode-image" src="./{image}" alt="{label}" width="1024" height="1024" loading="lazy"><div>'
+    if url:
+        barcode += f'<p>الوجهة المقروءة من الرمز: <a class="agri-inline-source" href="{e(url)}" target="_blank" rel="noopener noreferrer" dir="ltr">{e(url)}</a></p><p class="crop-directory-help">إذا نُشر الموقع على عنوان مختلف، سيظل هذا الرمز يفتح الوجهة المذكورة أعلاه؛ لا يتغير الرابط بتغيير ملفات الموقع.</p>'
+    barcode += f'<a href="./{image}" download class="secondary-button">تنزيل الرمز الأصلي</a></div></div></section>'
+
+entry = '<nav class="farmer-entry" aria-label="مسارات المزارع"><a href="#organicManure"><i class="fa-solid fa-leaf" aria-hidden="true"></i>السماد الحيواني والبيوت البلاستيكية</a><a href="#greenhouseSchedules"><i class="fa-solid fa-table-list" aria-hidden="true"></i>جداول الطماطم والخيار</a><a href="#cropDirectory"><i class="fa-solid fa-seedling" aria-hidden="true"></i>دليل المحاصيل والأشجار</a><a href="#farmerTools"><i class="fa-solid fa-calculator" aria-hidden="true"></i>أدوات التسميد والري</a></nav>'
+
+base_url = config.get('publicUrl','').rstrip('/')
+seo = '<meta property="og:type" content="website"><meta property="og:site_name" content="المنصة الاستشارية الزراعية السورية"><meta name="twitter:card" content="summary"><meta name="keywords" content="زراعة سورية، تسميد، سماد عضوي، بيوت بلاستيكية، تغذية النبات">'
+if base_url:
+    if urlsplit(base_url).scheme != 'https': raise ValueError('Public URL must be a real HTTPS origin/path')
+    seo += f'<link rel="canonical" href="{e(base_url)}/"><meta property="og:url" content="{e(base_url)}/"><meta property="og:image" content="{e(base_url)}/{e(config["logo"])}"><meta name="twitter:image" content="{e(base_url)}/{e(config["logo"])}">'
+    (PUBLIC / 'sitemap.xml').write_text('<?xml version="1.0" encoding="UTF-8"?><urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">'+''.join(f'<url><loc>{e(base_url + path)}</loc></url>' for path in ['/', '/consultation/new/'])+'</urlset>\n', encoding='utf-8')
+else:
+    (PUBLIC / 'sitemap.xml').unlink(missing_ok=True)
+(PUBLIC / 'robots.txt').write_text('User-agent: *\nAllow: /\n' + (f'Sitemap: {base_url}/sitemap.xml\n' if base_url else ''), encoding='utf-8')
+
+html = (ROOT / 'src/index.template.html').read_text(encoding='utf-8')
+replacements = {'ORGANIC_SECTION':organic_html,'GREENHOUSE_SCHEDULES':schedule_html,'CROP_DIRECTORY':directory,'FARMER_TOOLS':(ROOT/'src/farmer-tools-section.html').read_text(encoding='utf-8'),'CROP_OPTIONS':options,'CROP_COUNT':str(len(crops)),'SOURCES_SECTION':sources_html,'BARCODE_SECTION':barcode,'HEADER_BARCODE':header_barcode,'FARMER_ENTRY':entry,'SEO_METADATA':seo}
+for key,value in replacements.items():
+    html = html.replace('@@'+key+'@@',value)
+# Apply only exact original statements verified by the research audit. HTML-level issues are also amended in source template by parent.
+for issue in audit.get('issues', []):
+    original, replacement = issue.get('original',''), issue.get('replacement','')
+    if original and replacement and '<' not in original:
+        html = html.replace(original, e(replacement))
+html = html.replace('./assets/images/logo.png','./'+config['logo'])
+if re.search(r'@@[A-Z_]+@@',html): raise ValueError('Unresolved build marker')
+(PUBLIC / 'index.html').write_text(html.rstrip()+'\n', encoding='utf-8')
+# Serialize trusted catalogue data, escape HTML-sensitive chars even though this is external JS.
+data = json.dumps(crops, ensure_ascii=False).replace('<','\\u003c').replace('>','\\u003e').replace('&','\\u0026')
+(PUBLIC / 'assets/js/crop-data.js').write_text('window.SyrAgriCrops = '+data+';\n', encoding='utf-8')
+consultation = (ROOT / 'src/consultation.template.html').read_text(encoding='utf-8')
+consultation = re.sub(r'(<select\b[^>]*\bid="demoCrop"[^>]*>).*?(</select>)',r'\g<1><option value="">اختر المحصول</option>'+options+r'\g<2>',consultation,flags=re.S)
+consultation = consultation.replace('../../assets/images/logo.png','../../'+config['logo'])
+if base_url:
+    consultation = consultation.replace('</head>',f'<link rel="canonical" href="{e(base_url)}/consultation/new/"></head>')
+(PUBLIC/'consultation/new/index.html').write_text(consultation.rstrip()+'\n',encoding='utf-8')
+(PUBLIC/'.nojekyll').touch()
+print(f'Built {len(crops)} crop records, {len(organic["paragraphs"])} organic topics, {len(source_map)} references, original supplied QR.')
