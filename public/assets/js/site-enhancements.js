@@ -16,6 +16,52 @@
     if (empty) empty.hidden = count > 0;
   }
   document.addEventListener('DOMContentLoaded', () => {
+    const main = document.getElementById('main-content');
+    const hub = document.getElementById('sectionHub');
+    const focusLinks = [...(hub?.querySelectorAll('[data-focus-section]') || [])];
+    const showAllButton = document.getElementById('showAllSections');
+    const hubStatus = document.getElementById('sectionHubStatus');
+    const sectionTitle = id => focusLinks.find(link => link.dataset.focusSection === id)?.textContent.trim() || 'القسم المحدد';
+    const topLevel = element => {
+      let current = element;
+      while (current && current.parentElement !== main) current = current.parentElement;
+      return current?.parentElement === main ? current : null;
+    };
+    function setFocus(id) {
+      const selected = topLevel(document.getElementById(id));
+      if (!main || !selected) return false;
+      [...main.children].forEach(child => {
+        child.hidden = child !== selected && child !== hub;
+      });
+      focusLinks.forEach(link => {
+        if (link.dataset.focusSection === id) link.setAttribute('aria-current', 'page');
+        else link.removeAttribute('aria-current');
+      });
+      showAllButton?.setAttribute('aria-pressed', 'false');
+      if (hubStatus) hubStatus.textContent = `يعرض الآن: ${sectionTitle(id)}. اختر موضوعاً آخر للتبديل.`;
+      return true;
+    }
+    function showAll() {
+      if (!main) return;
+      [...main.children].forEach(child => { child.hidden = false; });
+      focusLinks.forEach(link => link.removeAttribute('aria-current'));
+      showAllButton?.setAttribute('aria-pressed', 'true');
+      if (hubStatus) hubStatus.textContent = 'تُعرض جميع أقسام المنصة الطويلة في صفحة واحدة.';
+    }
+    focusLinks.forEach(link => link.addEventListener('click', event => {
+      if (setFocus(link.dataset.focusSection)) event.preventDefault();
+    }));
+    showAllButton?.addEventListener('click', showAll);
+    main?.addEventListener('click', event => {
+      const anchor = event.target.closest('a[href^="#"]');
+      if (!anchor || anchor.hasAttribute('data-focus-section')) return;
+      const id = decodeURIComponent(anchor.getAttribute('href').slice(1));
+      if (id) setFocus(id);
+    });
+    const initialHash = window.location?.hash || '';
+    const initialId = initialHash ? decodeURIComponent(initialHash.slice(1)) : 'monthlyGuidance';
+    if (!setFocus(initialId)) setFocus('monthlyGuidance');
+
     const scheduleTabs = document.querySelectorAll('[data-schedule-target]');
     const scheduleCards = document.querySelectorAll('[data-schedule-card]');
     scheduleTabs.forEach(tab => tab.addEventListener('click', () => {

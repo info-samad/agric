@@ -20,3 +20,14 @@
 .schedule-tab.active { border-color: #d4af37; background: #163b27; color: #fff; }
 .schedule-tab:focus-visible { outline: 3px solid #d4af37; outline-offset: 2px; }
 @media print { .schedule-tabs { display: none; } .schedule-card[hidden] { display: block !important; } }
+
+/* Focused navigation: browse one main topic at a time without losing the full-page option. */
+.section-hub{margin:0 0 1.5rem;padding:1rem 1.2rem;border:1px solid #dce6df;border-radius:1.2rem;background:#f5f9f6;scroll-margin-top:7rem}
+.section-hub-heading{display:flex;align-items:center;justify-content:space-between;gap:1rem}.section-hub-heading span,.manure-brand-kicker{font-size:.7rem;font-weight:800;color:#8a6d22}.section-hub-heading h2{margin:.15rem 0;color:#163b27;font-size:1.1rem;font-weight:900}.section-hub-heading p,.section-hub-status{margin:.2rem 0;color:#607066;font-size:.75rem;line-height:1.8}
+.section-hub-heading button{border:1px solid #adc2b3;border-radius:.7rem;background:#fff;padding:.65rem .85rem;color:#163b27;font:inherit;font-size:.75rem;font-weight:800;cursor:pointer}.section-hub-heading button[aria-pressed="true"]{background:#163b27;color:#fff}
+.section-hub-links{display:flex;flex-wrap:wrap;gap:.45rem;margin-top:.8rem}.section-hub-links a{border:1px solid #d7e2da;border-radius:99px;background:#fff;padding:.5rem .8rem;color:#244b33;font-size:.73rem;font-weight:800;text-decoration:none}.section-hub-links a[aria-current="page"]{border-color:#163b27;background:#163b27;color:#fff}.section-hub a:focus-visible,.section-hub button:focus-visible{outline:3px solid #d4af37;outline-offset:2px}
+.manure-brand-card{display:flex;align-items:center;justify-content:space-between;gap:1.2rem;margin:1rem 0;padding:1.1rem 1.2rem;border:1px solid #d7e4da;border-right:5px solid #b28b2d;border-radius:1rem;background:linear-gradient(110deg,#f7faf7,#fff)}.manure-brand-card h3{margin:.2rem 0;color:#163b27;font-size:1.05rem;font-weight:900}.manure-brand-card h3 span{font-size:.85rem;font-weight:700}.manure-brand-card p{max-width:740px;margin:.3rem 0 0;color:#526258;font-size:.78rem;line-height:1.9}.manure-brand-card>a{flex-shrink:0;border-radius:.75rem;background:#163b27;padding:.75rem 1rem;color:white;font-size:.75rem;font-weight:800;text-decoration:none}.manure-brand-card>a:hover{background:#24573a}
+.agri-details summary{padding-block:.2rem}.agri-details[open] summary{margin-bottom:.4rem}
+main>[hidden]{display:none!important}
+@media(max-width:600px){.section-hub{padding:.85rem;border-radius:1rem}.section-hub-heading{align-items:flex-start;flex-direction:column}.section-hub-heading button{width:100%}.section-hub-links a{font-size:.68rem;padding:.45rem .65rem}.manure-brand-card{align-items:stretch;flex-direction:column;gap:.8rem;padding:1rem}.manure-brand-card>a{text-align:center}}
+@media print{.section-hub{display:none!important}.manure-brand-card{break-inside:avoid}.manure-brand-card>a{background:#fff;color:#163b27;border:1px solid #163b27}}

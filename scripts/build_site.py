@@ -48,7 +48,8 @@ def links(ids):
 def section_start(id, kicker, title, intro):
     return f'<section id="{id}" class="agri-section" aria-labelledby="{id}Title"><span class="agri-kicker">{e(kicker)}</span><h2 id="{id}Title">{e(title)}</h2><p>{e(intro)}</p><span class="agri-review">مراجعة المصادر: {e(reviewed)}</span>'
 
-organic_html = section_start('organicManure','أولوية للمزارع · تربة البيوت البلاستيكية',organic['title'],'زيادة المادة العضوية ليست مبرراً لزيادة الروث كل موسم. افصل جودة المادة وسلامتها عن حساب عناصرها، واربط الإضافة بتحليل التربة والماء والكمبوست.')
+organic_html = section_start('organicManure','سماد الزراعة النظيفة · السماد العضوي الحيواني',organic['title'],'روث الأبقار والأغنام والماعز والدواجن والكمبوست الحيواني مواد متغيرة التركيب؛ لا توجد قيمة NPK ثابتة تُستنتج من اسم الحيوان وحده. اربط قرار الاستخدام بتحليل الدفعة الفعلية وسلامتها واحتياج التربة والمحصول.')
+organic_html += '<div class="manure-brand-card"><div><span class="manure-brand-kicker">المنتج الذي طلبتم إبراز اسمه</span><h3>سماد الزراعة النظيفة <span>(سماد عضوي حيواني)</span></h3><p>اسم المنتج أو نوع الحيوان لا يحدد وحده نسب العناصر أو الملوحة أو درجة النضج. راجع ملصق العبوة واطلب تحليل الدفعة الحالية قبل تحديد طريقة الاستخدام أو كميته.</p></div><a href="https://info-samad.github.io" target="_blank" rel="noopener noreferrer">زيارة موقع سماد الزراعة النظيفة <span aria-hidden="true">↗</span></a></div>'
 organic_html += '<div class="agri-notice"><strong>قبل أي إضافة داخل البيت:</strong> لا تستخدم الروث الطازج أو غير موثق المعالجة أثناء إنتاج الخضار؛ لا تُحقن منقوعاته في التنقيط. صلاحية المادة تتطلب تقييم النضج والسلامة والملوحة والفوسفور، لا اسم الحيوان أو مدة التخزين فقط.</div>'
 steps = [
     ('01','حلّل أولاً','عينة تربة وماء ري ومادة عضوية ممثلة؛ سجّل EC وطريقة القياس والرطوبة وأساس العناصر.'),
@@ -56,8 +57,8 @@ steps = [
     ('03','وازن قبل الزراعة','كمية يحددها التحليل والتوصية، مع توزيع منتظم واحتساب العناصر وتجنب زيادة الأملاح والفوسفور.')
 ]
 organic_html += '<div class="organic-workflow">' + ''.join(f'<article class="organic-step"><span class="organic-step-number">{n}</span><h3>{e(t)}</h3><p>{e(p)}</p></article>' for n,t,p in steps) + '</div>'
-for index, record in enumerate(organic['paragraphs']):
-    organic_html += f'<details class="agri-details" {"open" if index == 0 else ""}><summary>{e(record["heading"])}</summary><p>{e(record["text"])}</p>{links(record["sourceIds"])}</details>'
+for record in organic['paragraphs']:
+    organic_html += f'<details class="agri-details"><summary>{e(record["heading"])}</summary><p>{e(record["text"])}</p>{links(record["sourceIds"])}</details>'
 organic_html += '<p class="crop-directory-help">تُطبّق هذه المبادئ على زراعة التربة، لا الزراعة المائية. لا تُستخدم أرقام المعايير الأجنبية بوصفها تشريعاً سورياً أو جرعات سورية.</p><a class="secondary-button" href="#farmerTools">احسب مساهمة سمادك من التحليل</a></section>'
 
 def schedule_table(schedule):
